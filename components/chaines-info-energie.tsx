@@ -1111,10 +1111,10 @@ const ChainesInfoEnergie = () => {
               {/* Dark Mode Toggle */}
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-xl transition-all duration-300 border border-transparent hover:shadow-sm ${
+                className={`p-2 rounded-full transition-all duration-300 ml-2 md:ml-4 ${
                   darkMode
-                    ? "bg-gray-800 text-yellow-500 hover:bg-gray-700 hover:border-gray-600"
-                    : "bg-gray-100 text-gray-500 hover:bg-white hover:text-gray-700 hover:border-gray-200"
+                    ? "text-yellow-500 hover:bg-gray-800/80"
+                    : "text-gray-500 hover:bg-gray-200/50 hover:text-gray-700"
                 }`}
                 title={darkMode ? "Mode Clair" : "Mode Sombre"}
               >
