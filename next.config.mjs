@@ -11,6 +11,9 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  output: 'export',
+  basePath: '/chaine-info-energie',
+  assetPrefix: '/chaine-info-energie',
 }
 
 export default nextConfig
