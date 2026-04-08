@@ -56,7 +56,7 @@ import { NotificationSystem } from "./notification-system"
 import { MaitriseTotaleBadge } from "./badges/maitrise-totale-badge"
 
 const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }: any) => {
-  let cardClasses = "p-4 rounded-lg shadow-md transition-all duration-300 hover:shadow-xl "
+  let cardClasses = "group relative p-3 md:p-4 rounded-xl shadow-md transition-all duration-300 hover:shadow-xl flex items-center justify-center text-center "
 
   if (isUsed) {
     cardClasses += darkMode
@@ -68,8 +68,8 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
       : "bg-blue-100 border-2 border-blue-500 scale-110 shadow-2xl floating-animation cursor-pointer"
   } else {
     cardClasses += darkMode
-      ? "bg-gray-800 hover:scale-105 hover:shadow-xl hover:bg-gray-700 cursor-pointer"
-      : "bg-white hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer"
+      ? "bg-gray-800 hover:scale-105 hover:shadow-xl hover:bg-gray-700 cursor-pointer border border-gray-700"
+      : "bg-white hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer border border-gray-200"
   }
 
   return (
@@ -77,18 +77,28 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
       onClick={() => !isUsed && onClick(element)}
       className={cardClasses}
     >
-      <div className={`font-semibold mb-2 select-none ${darkMode ? "text-white" : "text-gray-800"}`}>
+      <div className={`font-semibold flex items-center select-none ${darkMode ? "text-white" : "text-gray-800"}`}>
         {isSelected && <span className="text-blue-600 mr-2 animate-bounce">👆</span>}
         {element.name || element.text}
+        {(!isUsed && (element.definition || element.role)) && (
+          <Info className={`ml-2 w-4 h-4 opacity-50 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
+        )}
       </div>
-      {element.definition && (
-        <div className={`text-sm mb-1 select-none ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-          <strong>Définition:</strong> {element.definition}
-        </div>
-      )}
-      {element.role && (
-        <div className={`text-sm select-none ${darkMode ? "text-blue-400" : "text-blue-600"}`}>
-          <strong>Rôle:</strong> {element.role}
+
+      {(!isUsed && (element.definition || element.role)) && (
+        <div className={`absolute bottom-full mb-3 left-1/2 min-w-64 max-w-sm -translate-x-1/2 p-4 rounded-xl shadow-2xl z-[60] transition-all duration-200 pointer-events-none ${darkMode ? "bg-gray-800 border border-gray-700 text-white shadow-black/50" : "bg-white border border-gray-200 text-gray-800 shadow-xl"} ${isSelected ? "opacity-100 visible scale-100" : "opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100"}`}>
+          {element.definition && (
+            <div className={`text-sm mb-2 text-left ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+              <strong className={darkMode ? "text-blue-400" : "text-blue-600"}>Définition :</strong> {element.definition}
+            </div>
+          )}
+          {element.role && (
+            <div className={`text-sm text-left ${darkMode ? "text-indigo-400" : "text-indigo-600"}`}>
+              <strong className={darkMode ? "text-indigo-400" : "text-indigo-600"}>Rôle :</strong> {element.role}
+            </div>
+          )}
+          {/* Petite flèche en bas */}
+          <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 border-8 border-transparent ${darkMode ? "border-t-gray-800" : "border-t-white"}`}></div>
         </div>
       )}
     </div>
@@ -112,11 +122,11 @@ const CommunicateDistributeLink = ({ darkMode }: { darkMode: boolean }) => {
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1 rotate-45 w-3 h-3 border-b-2 border-r-2 border-green-500"></div>
       </div>
       <div
-        className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-8 border-2 border-green-500 border-dashed rounded-md flex items-center justify-center ${
-          darkMode ? "bg-gray-800" : "bg-white"
+        className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-1 flex items-center justify-center rounded-full z-10 shadow-sm transition-colors duration-300 ${
+          darkMode ? "bg-green-900 border border-green-700" : "bg-green-100 border border-green-300"
         }`}
       >
-        <span className="text-xs font-semibold text-green-600">ORDRE</span>
+        <span className={`text-[11px] leading-none font-bold uppercase tracking-wider mb-[1px] ${darkMode ? "text-green-300" : "text-green-700"}`}>ORDRE</span>
       </div>
     </div>
   )
@@ -1352,38 +1362,27 @@ const ChainesInfoEnergie = () => {
     const isNextUnlocked = exercicesDebloques.includes(nextExerciseIndex)
     const hasNextExercise = nextExerciseIndex < exercises.length
 
-    if (!hasNextExercise) return null
+    if (!hasNextExercise || !isNextUnlocked) return null
 
     return (
-      <div className="fixed bottom-4 right-4 z-40">
+      <div className="fixed bottom-4 right-4 z-40 animate-fade-in">
         <button
           onClick={() => {
-            if (isNextUnlocked) {
-              setCurrentExercise(nextExerciseIndex)
-              setSelectedElement(null)
-              setShowNextExercise(false)
-            }
+            setCurrentExercise(nextExerciseIndex)
+            setSelectedElement(null)
+            setShowNextExercise(false)
           }}
-          disabled={!isNextUnlocked}
-          className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 ${
-            !isNextUnlocked
-              ? darkMode
-                ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : darkMode
-                ? "bg-green-800 text-green-200 border border-green-600 hover:bg-green-700 shadow-lg"
-                : "bg-green-600 text-white hover:bg-green-700 shadow-lg"
-          } ${isNextUnlocked ? "animate-pulse-slow" : ""}`}
-          style={
-            isNextUnlocked
-              ? {
-                  boxShadow: "0 0 20px rgba(34, 197, 94, 0.5)",
-                }
-              : {}
-          }
+          className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg animate-pulse-slow ${
+            darkMode
+              ? "bg-green-800 text-green-200 border border-green-600 hover:bg-green-700"
+              : "bg-green-600 text-white hover:bg-green-700"
+          }`}
+          style={{
+            boxShadow: "0 0 20px rgba(34, 197, 94, 0.5)",
+          }}
         >
-          {!isNextUnlocked ? <Lock className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
-          <span>{isNextUnlocked ? `Exercice ${nextExerciseIndex + 2}` : "Exercice verrouillé"}</span>
+          <span>Exercice {nextExerciseIndex + 2}</span>
+          <ChevronRight className="w-5 h-5 ml-1" />
         </button>
       </div>
     )
@@ -1840,22 +1839,68 @@ const ChainesInfoEnergie = () => {
                 Raccourcis Mode Développeur
               </h3>
             </div>
-            <div className="flex justify-center space-x-4 flex-wrap gap-2">
-              <button
-                onClick={completerLecon}
-                disabled={isLessonComplete()}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  isLessonComplete()
-                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                    : darkMode
-                      ? "bg-blue-900 text-blue-200 border border-blue-700 hover:bg-blue-800"
-                      : "bg-blue-100 text-blue-600 border border-blue-600 hover:bg-blue-50"
-                }`}
-              >
-                Compléter la leçon
-              </button>
 
-              {currentMode === "exercises" && (
+            <div className="flex justify-center mb-6">
+              <div className="flex items-center gap-3">
+                <label className={`font-semibold ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  Aller à :
+                </label>
+                <select
+                  className={`px-4 py-2 rounded-lg font-semibold border focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm transition-colors ${
+                    darkMode 
+                      ? "bg-gray-800 text-white border-gray-600 focus:border-blue-500" 
+                      : "bg-white text-gray-800 border-gray-300 focus:border-blue-500"
+                  }`}
+                  value={currentMode === "lesson" ? "lesson" : currentExercise.toString()}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "lesson") {
+                      setCurrentMode("lesson");
+                    } else {
+                      const idx = parseInt(val, 10);
+                      setCurrentMode("exercises");
+                      setCurrentExercise(idx);
+                      // S'assurer que le niveau est bien débloqué en mode Dev
+                      if (!exercicesDebloques.includes(idx)) {
+                        setExercicesDebloques((prev) => {
+                          const newUnlocked = new Set([...prev]);
+                          for (let i = 0; i <= idx; i++) newUnlocked.add(i);
+                          return Array.from(newUnlocked);
+                        });
+                      }
+                    }
+                    // Reset selected element/states during jump
+                    setSelectedElement(null);
+                    setShowNextExercise(false);
+                    setErreursDansExercice(0);
+                  }}
+                >
+                  <option value="lesson">Exercice 1 (Leçon)</option>
+                  {exercises.map((ex, idx) => (
+                    <option key={idx} value={idx.toString()}>
+                      Exercice {idx + 2} : {ex.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-center space-x-4 flex-wrap gap-2">
+              {currentMode === "lesson" ? (
+                <button
+                  onClick={completerLecon}
+                  disabled={isLessonComplete()}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    isLessonComplete()
+                      ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                      : darkMode
+                        ? "bg-blue-900 text-blue-200 border border-blue-700 hover:bg-blue-800"
+                        : "bg-blue-100 text-blue-600 border border-blue-600 hover:bg-blue-50"
+                  }`}
+                >
+                  Compléter l'Exercice 1
+                </button>
+              ) : (
                 <button
                   onClick={completerExerciceActuel}
                   disabled={exercicesTermines.includes(currentExercise)}
@@ -1867,25 +1912,25 @@ const ChainesInfoEnergie = () => {
                         : "bg-green-100 text-green-600 border border-green-600 hover:bg-green-50"
                   }`}
                 >
-                  Compléter l'exercice actuel
+                  Compléter l'Exercice {currentExercise + 2}
                 </button>
               )}
 
-              <button
-                onClick={resetLesson}
-                disabled={isLessonAtZero}
-                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
-                  isLessonAtZero
-                    ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                    : darkMode
-                      ? "bg-orange-900 text-orange-200 border border-orange-700 hover:bg-orange-800"
-                      : "bg-orange-100 text-orange-600 border border-orange-600 hover:bg-orange-50"
-                }`}
-              >
-                Réinitialiser la leçon
-              </button>
-
-              {currentMode === "exercises" && (
+              {currentMode === "lesson" ? (
+                <button
+                  onClick={resetLesson}
+                  disabled={isLessonAtZero}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    isLessonAtZero
+                      ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                      : darkMode
+                        ? "bg-orange-900 text-orange-200 border border-orange-700 hover:bg-orange-800"
+                        : "bg-orange-100 text-orange-600 border border-orange-600 hover:bg-orange-50"
+                  }`}
+                >
+                  Réinitialiser l'Exercice 1
+                </button>
+              ) : (
                 <button
                   onClick={resetExercise}
                   disabled={isExerciseAtZero}
@@ -1897,7 +1942,7 @@ const ChainesInfoEnergie = () => {
                         : "bg-orange-100 text-orange-600 border border-orange-600 hover:bg-orange-50"
                   }`}
                 >
-                  Réinitialiser l'exercice
+                  Réinitialiser l'Exercice {currentExercise + 2}
                 </button>
               )}
 
@@ -1912,7 +1957,7 @@ const ChainesInfoEnergie = () => {
                       : "bg-red-100 text-red-600 border border-red-600 hover:bg-red-50"
                 }`}
               >
-                Réinitialiser toutes les statistiques
+                Réinitialiser toutes les stats
               </button>
             </div>
           </div>
