@@ -64,12 +64,12 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
       : "bg-gray-200 opacity-50 cursor-not-allowed"
   } else if (isSelected) {
     cardClasses += darkMode
-      ? "bg-blue-900 border-2 border-blue-400 scale-110 shadow-2xl floating-animation cursor-pointer"
-      : "bg-blue-100 border-2 border-blue-500 scale-110 shadow-2xl floating-animation cursor-pointer"
+      ? "bg-blue-900 border-2 border-blue-400 scale-[1.02] shadow-[0_0_20px_rgba(96,165,250,0.4)] z-50 cursor-pointer"
+      : "bg-blue-100 border-2 border-blue-500 scale-[1.02] shadow-[0_0_20px_rgba(59,130,246,0.4)] z-50 cursor-pointer"
   } else {
     cardClasses += darkMode
-      ? "bg-gray-800 hover:scale-105 hover:shadow-xl hover:bg-gray-700 cursor-pointer border border-gray-700"
-      : "bg-white hover:scale-105 hover:shadow-xl hover:bg-blue-50 cursor-pointer border border-gray-200"
+      ? "bg-gray-800 hover:scale-105 hover:shadow-xl hover:bg-gray-700 hover:z-50 cursor-pointer border border-gray-700"
+      : "bg-white hover:scale-105 hover:shadow-xl hover:bg-blue-50 hover:z-50 cursor-pointer border border-gray-200"
   }
 
   return (
@@ -80,15 +80,12 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
       <div className={`font-semibold flex items-center select-none ${darkMode ? "text-white" : "text-gray-800"}`}>
         {isSelected && <span className="text-blue-600 mr-2 animate-bounce">👆</span>}
         {element.name || element.text}
-        {(!isUsed && (element.definition || element.role)) && (
-          <Info className={`ml-2 w-4 h-4 opacity-50 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
-        )}
       </div>
 
       {(!isUsed && (element.definition || element.role)) && (
-        <div className={`absolute bottom-full mb-3 left-1/2 min-w-64 max-w-sm -translate-x-1/2 p-4 rounded-xl shadow-2xl z-[60] transition-all duration-200 pointer-events-none ${darkMode ? "bg-gray-800 border border-gray-700 text-white shadow-black/50" : "bg-white border border-gray-200 text-gray-800 shadow-xl"} ${isSelected ? "opacity-100 visible scale-100" : "opacity-0 invisible group-hover:opacity-100 group-hover:visible scale-95 group-hover:scale-100"}`}>
+        <div className={`absolute bottom-full mb-4 left-1/2 min-w-64 max-w-sm -translate-x-1/2 p-5 rounded-2xl z-[60] transition-all duration-400 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom pointer-events-none ${darkMode ? "bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.5)]" : "bg-white/95 backdrop-blur-xl border border-slate-200/50 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"} ${isSelected ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible translate-y-3 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100"}`}>
           {element.definition && (
-            <div className={`text-sm mb-2 text-left ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+            <div className={`text-sm mb-2 text-left ${darkMode ? "text-slate-300" : "text-slate-600"}`}>
               <strong className={darkMode ? "text-blue-400" : "text-blue-600"}>Définition :</strong> {element.definition}
             </div>
           )}
@@ -98,7 +95,7 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
             </div>
           )}
           {/* Petite flèche en bas */}
-          <div className={`absolute -bottom-2 left-1/2 -translate-x-1/2 border-8 border-transparent ${darkMode ? "border-t-gray-800" : "border-t-white"}`}></div>
+          <div className={`absolute -bottom-2 left-1/2 -ml-2 w-4 h-4 rotate-45 border-b border-r ${darkMode ? "bg-slate-800 border-slate-700/50" : "bg-white border-slate-200/50"}`}></div>
         </div>
       )}
     </div>
@@ -1149,7 +1146,7 @@ const ChainesInfoEnergie = () => {
     )
   }
 
-  const DropZone = ({ chainType, position, isExercise = false }) => {
+  const renderDropZone = (chainType, position, isExercise = false) => {
     let isOccupied = false
     let occupiedElement = null
 
@@ -1229,7 +1226,6 @@ const ChainesInfoEnergie = () => {
         onMouseEnter={() => setHoveredZone(zoneId)}
         onMouseLeave={() => {
           setHoveredZone(null)
-          setHoveredHint(null)
         }}
         className={`${zoneClasses} ${!isOccupied && selectedElement ? "drop-zone-glow" : ""}`}
       >
@@ -1292,20 +1288,29 @@ const ChainesInfoEnergie = () => {
         )}
 
         {/* Tooltip avec l'indice */}
-        {!isExercise && !isOccupied && hoveredHint === hintId && (
+        {!isExercise && !isOccupied && (
           <div
-            className={`absolute z-[9999] px-3 py-2 text-sm rounded-lg shadow-lg w-64 pointer-events-none ${
-              darkMode ? "bg-gray-700 text-white" : "bg-gray-800 text-white"
+            className={`absolute z-[9999] px-4 py-3 text-sm rounded-2xl w-64 pointer-events-none transition-all duration-400 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom ${
+              darkMode ? "bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.5)]" : "bg-white/95 backdrop-blur-xl border border-slate-200/50 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
+            } ${
+              hoveredHint === hintId 
+                ? "opacity-100 visible translate-y-0 scale-100" 
+                : "opacity-0 invisible translate-y-3 scale-95"
+            } ${
+              (position === 0 || ((chainType === "info" && position === 3) || (chainType === "energy" && position === 5))) ? "" : "-ml-32"
             }`}
             style={{
-              bottom: "calc(100% + 12px)",
+              bottom: "calc(100% + 16px)",
               left: position === 0 ? "-8px" : ((chainType === "info" && position === 3) || (chainType === "energy" && position === 5)) ? "auto" : "50%",
               right: ((chainType === "info" && position === 3) || (chainType === "energy" && position === 5)) ? "-16px" : "auto",
-              transform: position === 0 || ((chainType === "info" && position === 3) || (chainType === "energy" && position === 5)) ? "none" : "translateX(-50%)",
             }}
           >
-            <div className="font-semibold mb-1">💡 Indice :</div>
-            {chainHints[chainType][position]}
+            <div className={`font-semibold mb-1 ${darkMode ? "text-blue-400" : "text-blue-600"}`}>💡 Indice :</div>
+            <div className={darkMode ? "text-slate-300" : "text-slate-600"}>{chainHints[chainType][position]}</div>
+            {/* Flèche en bas pointant vers la zone */}
+            <div className={`absolute -bottom-2 w-4 h-4 rotate-45 border-b border-r ${
+              position === 0 ? "left-[88px]" : ((chainType === "info" && position === 3) || (chainType === "energy" && position === 5)) ? "left-[160px]" : "left-1/2 -ml-2"
+            } ${darkMode ? "bg-slate-800 border-slate-700/50" : "bg-white border-slate-200/50"}`} />
           </div>
         )}
       </div>
@@ -1461,55 +1466,109 @@ const ChainesInfoEnergie = () => {
               </p>
             </div>
 
-            <div className={`rounded-xl shadow-lg p-6 animate-intro-slide ${darkMode ? "bg-gradient-to-br from-indigo-900 to-blue-900 border border-indigo-700" : "bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200"}`}>
-              <div className="flex items-center mb-4">
-                <BookOpen className={`w-7 h-7 mr-3 ${darkMode ? "text-blue-400" : "text-blue-600"}`} />
-                <h2 className={`text-xl font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>
-                  Comprendre avant de jouer
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                {/* Chaîne d'information */}
-                <div className={`p-4 rounded-lg ${darkMode ? "bg-blue-800/50 border border-blue-700" : "bg-white border border-blue-200"}`}>
-                  <div className="flex items-center mb-2">
-                    <Lightbulb className={`w-5 h-5 mr-2 ${darkMode ? "text-blue-400" : "text-blue-600"}`} />
-                    <h3 className={`font-bold ${darkMode ? "text-blue-300" : "text-blue-700"}`}>Chaîne d'Information</h3>
+            <div className={`rounded-3xl shadow-xl overflow-hidden animate-intro-slide transition-all duration-500 ${darkMode ? "bg-slate-900/40 border border-slate-700/50" : "bg-white border border-slate-200"}`}>
+              {/* Entête de la section */}
+              <div className={`px-6 py-5 border-b sm:px-8 sm:py-6 ${darkMode ? "border-slate-800 bg-slate-900/60" : "border-slate-100 bg-slate-50/50"}`}>
+                <div className="flex items-center">
+                  <div className={`p-2.5 rounded-xl mr-4 shadow-sm ${darkMode ? "bg-indigo-500/20 text-indigo-400" : "bg-indigo-100 text-indigo-600"}`}>
+                    <BookOpen className="w-6 h-6" />
                   </div>
-                  <p className={`text-sm mb-2 ${darkMode ? "text-blue-200" : "text-blue-800"}`}>
-                    C'est le <strong>cerveau</strong> du système. Elle capte des informations et décide quoi faire.
-                  </p>
-                  <div className={`text-xs space-y-1 ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Environnement</strong> → ce qui entoure le système</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Acquérir</strong> → capter les informations (capteurs)</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Traiter</strong> → analyser et décider (processeur)</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Communiquer</strong> → envoyer les ordres</div>
-                  </div>
-                </div>
-
-                {/* Chaîne d'énergie */}
-                <div className={`p-4 rounded-lg ${darkMode ? "bg-red-800/50 border border-red-700" : "bg-white border border-red-200"}`}>
-                  <div className="flex items-center mb-2">
-                    <Zap className={`w-5 h-5 mr-2 ${darkMode ? "text-red-400" : "text-red-600"}`} />
-                    <h3 className={`font-bold ${darkMode ? "text-red-300" : "text-red-700"}`}>Chaîne d'Énergie</h3>
-                  </div>
-                  <p className={`text-sm mb-2 ${darkMode ? "text-red-200" : "text-red-800"}`}>
-                    Ce sont les <strong>muscles</strong> du système. Elle fournit la force pour agir.
-                  </p>
-                  <div className={`text-xs space-y-1 ${darkMode ? "text-red-300" : "text-red-700"}`}>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Source</strong> → d'où vient l'énergie (pile, prise...)</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Alimenter</strong> → adapter et mettre à disposition l'énergie</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Distribuer</strong> → répartir l'énergie selon les ordres</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Convertir</strong> → transformer l'énergie (moteur, LED...)</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Transmettre</strong> → transporter la force (engrenages, courroies...)</div>
-                    <div className="flex items-center"><ChevronRight className="w-3 h-3 mr-1" /><strong>Fonction (Action)</strong> → réaliser l'effet final attendu (avancer, éclairer...)</div>
+                  <div>
+                    <h2 className={`text-xl sm:text-2xl font-bold tracking-tight ${darkMode ? "text-white" : "text-slate-800"}`}>
+                      Comprendre avant de jouer
+                    </h2>
+                    <p className={`text-sm mt-1 font-medium ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+                      Les concepts clés pour réussir les exercices
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className={`flex items-center justify-center text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
-                <ArrowRight className="w-4 h-4 mr-2" />
-                La chaîne d'information <strong className="mx-1">commande</strong> la chaîne d'énergie grâce aux <strong className="ml-1">ordres</strong>.
+              {/* Contenu principal */}
+              <div className="p-6 sm:p-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+                  {/* Chaîne d'information */}
+                  <div className={`relative p-5 sm:p-6 rounded-2xl border transition-all duration-300 hover:shadow-lg group ${darkMode ? "bg-slate-800 border-slate-700 hover:border-blue-700/50" : "bg-white border-slate-100 hover:border-blue-200 shadow-sm"}`}>
+                    <div className="flex items-center mb-5">
+                      <div className={`p-2.5 rounded-xl mr-3 sm:mr-4 transition-colors ${darkMode ? "bg-blue-500/20 text-blue-400 group-hover:bg-blue-500/30" : "bg-blue-50 text-blue-600 group-hover:bg-blue-100"}`}>
+                        <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${darkMode ? "text-blue-300" : "text-blue-700"}`}>Chaîne d'Information</h3>
+                    </div>
+                    
+                    <div className={`mb-6 p-3.5 sm:p-4 rounded-xl text-sm leading-relaxed border ${darkMode ? "bg-slate-900/50 border-slate-700 text-slate-300" : "bg-slate-50/80 border-slate-100 text-slate-600"}`}>
+                      C'est le <strong className={darkMode ? "text-blue-400" : "text-blue-600"}>cerveau</strong> du système. Elle capte des informations et décide quoi faire.
+                    </div>
+
+                    {/* Stepper info */}
+                    <div className="relative space-y-5 sm:space-y-6">
+                      {/* Ligne verticale */}
+                      <div className={`absolute top-3 bottom-3 left-[9px] w-0.5 rounded-full ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}></div>
+
+                      {[
+                        { title: "Environnement", desc: "ce qui entoure le système" },
+                        { title: "Acquérir", desc: "capter les informations (capteurs)" },
+                        { title: "Traiter", desc: "analyser et décider (processeur)" },
+                        { title: "Communiquer", desc: "envoyer les ordres" }
+                      ].map((item, i) => (
+                        <div key={i} className="relative flex items-start z-10 group/item">
+                          <div className={`absolute left-[5px] top-1.5 w-2.5 h-2.5 rounded-full transition-transform group-hover/item:scale-125 ${darkMode ? "bg-blue-400 ring-4 ring-slate-800" : "bg-blue-500 ring-4 ring-white"}`}></div>
+                          <div className="ml-8">
+                            <strong className={`block text-sm sm:text-base font-semibold ${darkMode ? "text-slate-200" : "text-slate-800"}`}>{item.title}</strong>
+                            <span className={`text-xs sm:text-sm mt-0.5 block ${darkMode ? "text-slate-400" : "text-slate-500"}`}>{item.desc}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Chaîne d'énergie */}
+                  <div className={`relative p-5 sm:p-6 rounded-2xl border transition-all duration-300 hover:shadow-lg group ${darkMode ? "bg-slate-800 border-slate-700 hover:border-red-700/50" : "bg-white border-slate-100 hover:border-red-200 shadow-sm"}`}>
+                    <div className="flex items-center mb-5">
+                      <div className={`p-2.5 rounded-xl mr-3 sm:mr-4 transition-colors ${darkMode ? "bg-red-500/20 text-red-400 group-hover:bg-red-500/30" : "bg-red-50 text-red-600 group-hover:bg-red-100"}`}>
+                        <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <h3 className={`text-lg sm:text-xl font-bold tracking-tight ${darkMode ? "text-red-300" : "text-red-700"}`}>Chaîne d'Énergie</h3>
+                    </div>
+                    
+                    <div className={`mb-6 p-3.5 sm:p-4 rounded-xl text-sm leading-relaxed border ${darkMode ? "bg-slate-900/50 border-slate-700 text-slate-300" : "bg-slate-50/80 border-slate-100 text-slate-600"}`}>
+                      Ce sont les <strong className={darkMode ? "text-red-400" : "text-red-600"}>muscles</strong> du système. Elle fournit la force pour agir.
+                    </div>
+
+                    {/* Stepper energy */}
+                    <div className="relative space-y-5 sm:space-y-6">
+                      {/* Ligne verticale */}
+                      <div className={`absolute top-3 bottom-3 left-[9px] w-0.5 rounded-full ${darkMode ? "bg-slate-700" : "bg-slate-200"}`}></div>
+
+                      {[
+                        { title: "Source", desc: "d'où vient l'énergie (pile, prise...)" },
+                        { title: "Alimenter", desc: "adapter et mettre à disposition l'énergie" },
+                        { title: "Distribuer", desc: "répartir l'énergie selon les ordres" },
+                        { title: "Convertir", desc: "transformer l'énergie (moteur, LED...)" },
+                        { title: "Transmettre", desc: "transporter la force (engrenages, courroies...)" },
+                        { title: "Fonction (Action)", desc: "effet final attendu (avancer, éclairer...)" }
+                      ].map((item, i) => (
+                        <div key={i} className="relative flex items-start z-10 group/item">
+                          <div className={`absolute left-[5px] top-1.5 w-2.5 h-2.5 rounded-full transition-transform group-hover/item:scale-125 ${darkMode ? "bg-red-400 ring-4 ring-slate-800" : "bg-red-500 ring-4 ring-white"}`}></div>
+                          <div className="ml-8">
+                            <strong className={`block text-sm sm:text-base font-semibold ${darkMode ? "text-slate-200" : "text-slate-800"}`}>{item.title}</strong>
+                            <span className={`text-xs sm:text-sm mt-0.5 block ${darkMode ? "text-slate-400" : "text-slate-500"}`}>{item.desc}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Conclusion / Lien */}
+                <div className={`flex flex-col sm:flex-row items-center justify-center p-5 rounded-2xl text-sm sm:text-base border transition-all ${darkMode ? "bg-emerald-950/30 border-emerald-900/50 text-emerald-100" : "bg-emerald-50/70 border-emerald-100 text-emerald-800"}`}>
+                  <div className={`flex items-center justify-center p-2.5 rounded-xl mb-3 sm:mb-0 sm:mr-4 shadow-sm border ${darkMode ? "bg-emerald-900/60 border-emerald-800/80 text-emerald-400" : "bg-white border-emerald-100 text-emerald-500"}`}>
+                    <ArrowRight className="w-5 h-5" />
+                  </div>
+                  <span className="text-center sm:text-left leading-relaxed">
+                    La chaîne d'information <strong className={`font-bold ${darkMode ? "text-emerald-400" : "text-emerald-600"}`}>commande</strong> la chaîne d'énergie grâce aux <strong className={`font-bold ${darkMode ? "text-emerald-400" : "text-emerald-600"}`}>ordres</strong>.
+                  </span>
+                </div>
               </div>
             </div>
             
@@ -1563,13 +1622,13 @@ const ChainesInfoEnergie = () => {
                   </div>
 
                   <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    <DropZone chainType="info" position={0} />
+                    {renderDropZone("info", 0)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={1} />
+                    {renderDropZone("info", 1)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={2} />
+                    {renderDropZone("info", 2)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={3} />
+                    {renderDropZone("info", 3)}
                   </div>
                 </div>
 
@@ -1588,17 +1647,17 @@ const ChainesInfoEnergie = () => {
                   </div>
 
                   <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    <DropZone chainType="energy" position={0} />
+                    {renderDropZone("energy", 0)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={1} />
+                    {renderDropZone("energy", 1)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={2} />
+                    {renderDropZone("energy", 2)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={3} />
+                    {renderDropZone("energy", 3)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={4} />
+                    {renderDropZone("energy", 4)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={5} />
+                    {renderDropZone("energy", 5)}
                   </div>
                 </div>
               </div>
@@ -1649,13 +1708,13 @@ const ChainesInfoEnergie = () => {
                   </div>
 
                   <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    <DropZone chainType="info" position={0} isExercise />
+                    {renderDropZone("info", 0, true)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={1} isExercise />
+                    {renderDropZone("info", 1, true)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={2} isExercise />
+                    {renderDropZone("info", 2, true)}
                     <ChainArrows chainType="info" />
-                    <DropZone chainType="info" position={3} isExercise />
+                    {renderDropZone("info", 3, true)}
                   </div>
                 </div>
 
@@ -1674,17 +1733,17 @@ const ChainesInfoEnergie = () => {
                   </div>
 
                   <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    <DropZone chainType="energy" position={0} isExercise />
+                    {renderDropZone("energy", 0, true)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={1} isExercise />
+                    {renderDropZone("energy", 1, true)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={2} isExercise />
+                    {renderDropZone("energy", 2, true)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={3} isExercise />
+                    {renderDropZone("energy", 3, true)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={4} isExercise />
+                    {renderDropZone("energy", 4, true)}
                     <ChainArrows chainType="energy" />
-                    <DropZone chainType="energy" position={5} isExercise />
+                    {renderDropZone("energy", 5, true)}
                   </div>
                 </div>
               </div>

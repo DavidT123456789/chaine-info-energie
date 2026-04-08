@@ -1,22 +1,24 @@
 import React from "react"
-import { Heart, Crown, RotateCcw, Skull } from "lucide-react"
+import { Heart, Crown, RotateCcw, Skull, HeartCrack } from "lucide-react"
 
 export const ParticleSystem = React.memo(({ particles }: any) => {
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <div className="fixed inset-0 pointer-events-none z-[80]">
       {particles.map((particle: any) => (
         <div
           key={particle.id}
-          className="absolute rounded-full animate-ping"
+          className="absolute rounded-full"
           style={{
             left: particle.x,
             top: particle.y,
             width: particle.size,
             height: particle.size,
             backgroundColor: particle.color,
-            transform: `translate(${particle.vx * 20}px, ${particle.vy * 20}px)`,
             boxShadow: `0 0 ${particle.size * 2}px ${particle.color}`,
-          }}
+            '--tx': `${particle.vx * 20}px`,
+            '--ty': `${particle.vy * 20}px`,
+            animation: `particleExplode 1s cubic-bezier(0.25, 1, 0.5, 1) forwards`,
+          } as any}
         />
       ))}
     </div>
@@ -49,28 +51,40 @@ export const HeartLossAnimation = React.memo(({ heartLossAnimation }: any) => {
   if (!heartLossAnimation) return null
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
-      <div className="absolute inset-0 bg-red-500 opacity-20 animate-pulse"></div>
-
-      <div
-        className="absolute flex"
+    <div className="fixed inset-0 pointer-events-none z-[70] overflow-hidden">
+      {/* Subtle flash right at the cursor location instead of full screen */}
+      <div 
+        className="absolute w-32 h-32 -ml-16 -mt-16 bg-red-500/10 blur-xl rounded-full"
         style={{
-          left: heartLossAnimation.x - 30,
-          top: heartLossAnimation.y - 30,
-          animation: "heartBreak 2s ease-out forwards",
+          left: heartLossAnimation.x,
+          top: heartLossAnimation.y,
+          animation: 'scale-up 1s ease-out forwards, pulse-fast 1s ease-out forwards',
+        }}
+      />
+
+      {/* Modern floating broken heart */}
+      <div
+        className="absolute flex items-center justify-center w-16 h-16 -ml-8 -mt-8"
+        style={{
+          left: heartLossAnimation.x,
+          top: heartLossAnimation.y,
+          animation: "modernHeartLoss 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards",
         }}
       >
-        <Heart
-          className="w-8 h-16 text-red-500 transform -rotate-12"
-          style={{ clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)" }}
-        />
-        <Heart
-          className="w-8 h-16 text-red-500 transform rotate-12"
-          style={{ clipPath: "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)" }}
-        />
+        <HeartCrack className="w-10 h-10 text-red-500 drop-shadow-md" strokeWidth={2.5} />
       </div>
 
-
+       {/* Floating minus one indicator */}
+      <div 
+        className="absolute font-black text-red-500 text-2xl drop-shadow-md -ml-3 -mt-10"
+         style={{
+          left: heartLossAnimation.x,
+          top: heartLossAnimation.y,
+          animation: "floatUpFade 1.5s ease-out forwards",
+        }}
+      >
+        -1
+      </div>
     </div>
   )
 })
@@ -82,10 +96,10 @@ export const SuccessAnimation = React.memo(({ successAnimation }: any) => {
     <div className="fixed inset-0 pointer-events-none z-[60] flex items-center justify-center">
       <div className="relative group" style={{ animation: 'scale-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
         <div className="absolute inset-0 bg-green-400 opacity-20 blur-xl rounded-full"></div>
-        <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-green-600 dark:text-green-400 px-10 py-5 rounded-2xl font-bold text-2xl shadow-2xl border border-green-200/50 dark:border-green-800/50 flex items-center gap-3">
-          <span className="text-3xl animate-bounce" style={{ animationDuration: '2s' }}>✨</span>
+        <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-green-600 dark:text-green-400 px-10 py-5 rounded-2xl font-bold text-2xl shadow-2xl border border-green-200/50 dark:border-green-800/50 flex items-center gap-4">
+          <Heart className="w-8 h-8 text-green-500 fill-green-500 animate-bounce" style={{ animationDuration: '2s' }} />
           <span className="tracking-wide bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">{successAnimation.message}</span>
-          <span className="text-3xl animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }}>✨</span>
+          <Heart className="w-8 h-8 text-green-500 fill-green-500 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
         </div>
       </div>
     </div>
