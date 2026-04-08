@@ -966,19 +966,19 @@ const ChainesInfoEnergie = () => {
 
     return (
       <div
-        className={`sticky top-0 z-50 ${darkMode ? "bg-gray-900/60" : "bg-white/70"} backdrop-blur-md border-b ${darkMode ? "border-gray-700/50" : "border-gray-200/50"} shadow-lg`}
+        className={`sticky top-0 z-50 relative ${darkMode ? "bg-gray-900/60" : "bg-white/70"} backdrop-blur-md border-b ${darkMode ? "border-gray-700/50" : "border-gray-200/50"} shadow-lg`}
       >
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex flex-col xl:flex-row items-center justify-between gap-4">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex flex-col xl:flex-row items-center w-full gap-4">
             
             {/* Left side - Navigation/Breadcrumb */}
-            <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3">
-              <nav aria-label="Breadcrumb" className={`flex items-center p-1 md:p-1.5 rounded-2xl ${darkMode ? "bg-gray-800/80" : "bg-gray-100/80"} backdrop-blur-sm border ${darkMode ? "border-gray-700" : "border-gray-200/80"} shadow-inner`}>
-                <ol className="flex items-center">
-                  <li>
+            <div className="flex-1 flex flex-wrap items-center justify-center xl:justify-start gap-2 md:gap-3">
+              <nav aria-label="Breadcrumb" className={`h-10 md:h-11 flex items-center p-0.5 rounded-2xl ${darkMode ? "bg-gray-800/80" : "bg-gray-100/80"} backdrop-blur-sm border ${darkMode ? "border-gray-700" : "border-gray-200/80"} shadow-inner`}>
+                <ol className="flex items-center h-full">
+                  <li className="h-full">
                     <button
                       onClick={() => setCurrentMode("home")}
-                      className={`flex items-center px-3 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                      className={`h-full flex items-center px-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
                         currentMode === "home"
                           ? "bg-white text-purple-600 shadow-md dark:bg-gray-700 dark:text-purple-400"
                           : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50"
@@ -991,45 +991,56 @@ const ChainesInfoEnergie = () => {
                   
                   <ChevronRight className={`w-4 h-4 mx-1 ${darkMode ? "text-gray-600" : "text-gray-300"}`} />
                   
-                  <li>
+                  <li className="h-full">
                     <button
                       onClick={() => {
                         if (currentMode === "home") {
                           setCurrentMode(completedExercises.length > 0 ? "exercises" : "lesson");
                         }
                       }}
-                      className={`flex items-center px-3 py-2 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                      className={`h-full relative overflow-hidden flex items-center px-3 rounded-xl font-semibold text-sm transition-all duration-300 ${
                         currentMode === "lesson" || currentMode === "exercises"
-                           ? "bg-white text-blue-600 shadow-md dark:bg-gray-700 dark:text-blue-400"
+                           ? "bg-white text-blue-600 shadow-md dark:bg-gray-800 dark:text-blue-400"
                            : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-700/50"
                       }`}
                     >
-                      <Target className="w-4 h-4 sm:mr-1.5" />
-                      <span className="hidden sm:inline">Exercices</span>
+                      {/* Progress Background inside button */}
+                      {(currentMode === "lesson" || currentMode === "exercises") && (
+                        <>
+                          <div 
+                            className="absolute inset-y-0 left-0 bg-blue-50 dark:bg-blue-900/30 transition-all duration-500 ease-out"
+                            style={{ width: `${((currentMode === "lesson" ? 1 : currentExercise + 2) / (exercises.length + 1)) * 100}%` }}
+                          />
+                          <div 
+                            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500 ease-out"
+                            style={{ width: `${((currentMode === "lesson" ? 1 : currentExercise + 2) / (exercises.length + 1)) * 100}%` }}
+                          />
+                        </>
+                      )}
+
+                      <div className="relative z-10 flex items-center">
+                        <Target className="w-4 h-4 sm:mr-1.5" />
+                        <span className="hidden sm:inline">
+                          {(currentMode === "lesson" || currentMode === "exercises") 
+                             ? `Exercice ${currentMode === "lesson" ? 1 : currentExercise + 2}/${exercises.length + 1}`
+                             : "Exercices"}
+                        </span>
+                        {/* Mobile view just shows numbers */}
+                        <span className="inline sm:hidden ml-1.5">
+                          {(currentMode === "lesson" || currentMode === "exercises") 
+                             ? `${currentMode === "lesson" ? 1 : currentExercise + 2}/${exercises.length + 1}` 
+                             : ""}
+                        </span>
+                      </div>
                     </button>
                   </li>
                 </ol>
               </nav>
 
-              {/* Progress indicator for exercises */}
-              {(currentMode === "lesson" || currentMode === "exercises") && (
-                <div className={`flex items-center px-4 py-2 rounded-2xl ${darkMode ? "bg-gray-800/80 border border-gray-700" : "bg-gray-100/80 border border-gray-200/80"} shadow-inner`}>
-                  <div className={`text-sm font-semibold mr-3 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
-                    Exercice {currentMode === "lesson" ? 1 : currentExercise + 2}/{exercises.length + 1}
-                  </div>
-                  <div className={`w-20 sm:w-24 md:w-32 h-2.5 rounded-full overflow-hidden ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}>
-                    <div
-                      className="h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full transition-all duration-500 ease-out"
-                      style={{ width: `${((currentMode === "lesson" ? 1 : currentExercise + 2) / (exercises.length + 1)) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-
               {devModeUnlocked && (
                 <button
                   onClick={() => setShowDevMode(true)}
-                  className={`px-3 py-2 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 flex items-center space-x-1.5 ${
+                  className={`h-10 md:h-11 px-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 flex items-center space-x-1.5 ${
                     darkMode
                       ? "bg-gray-800 text-orange-400 border border-orange-400/50 hover:bg-gray-700"
                       : "bg-white text-orange-600 border border-orange-200 hover:bg-orange-50 shadow-sm"
@@ -1041,12 +1052,10 @@ const ChainesInfoEnergie = () => {
               )}
             </div>
 
-            {/* Right side - User Stats & Mode */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-2 xl:mt-0">
-              {/* Stats Block */}
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
+            {/* Center - User Stats */}
+            <div className="flex-none flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-2 xl:mt-0">
                 {/* Lives */}
-                <div className={`flex items-center px-3 md:px-4 py-1.5 md:py-2 rounded-2xl border shadow-sm transition-all duration-300 ${darkMode ? "bg-red-950/40 border-red-900/50" : "bg-gradient-to-br from-red-50 to-rose-50 border-red-200"}`} title={`${lives} vie(s) restante(s)`}>
+                <div className={`h-10 md:h-11 flex items-center px-3 md:px-4 rounded-2xl border shadow-sm transition-all duration-300 ${darkMode ? "bg-red-950/40 border-red-900/50" : "bg-gradient-to-br from-red-50 to-rose-50 border-red-200"}`} title={`${lives} vie(s) restante(s)`}>
                   <div className="flex gap-1.5 items-center">
                     {[...Array(getMaxLives())].map((_, i) => (
                       <div key={i} className="relative">
@@ -1071,7 +1080,7 @@ const ChainesInfoEnergie = () => {
 
                 {/* Badges Collection */}
                 <div
-                  className={`flex items-center px-3 md:px-4 py-1.5 md:py-2 rounded-2xl shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md ${darkMode ? "bg-purple-950/40 border border-purple-900/50" : "bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-200"}`}
+                  className={`h-10 md:h-11 flex items-center px-3 md:px-4 rounded-2xl shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md ${darkMode ? "bg-purple-950/40 border border-purple-900/50" : "bg-gradient-to-br from-purple-50 to-fuchsia-50 border border-purple-200"}`}
                   onClick={() => setShowProgressModal(true)}
                   title={`${badgesObtenus.length} badge(s) sur ${badges.length} débloqué(s)`}
                 >
@@ -1085,43 +1094,45 @@ const ChainesInfoEnergie = () => {
 
                 {/* Progression Badge (Level + Score combined) */}
                 <div
-                  className={`flex items-center px-3 md:px-4 py-1.5 md:py-2 rounded-2xl shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md ${niveauActuel.couleur}`}
+                  className={`h-10 md:h-11 flex items-center pr-3 md:pr-4 rounded-2xl shadow-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md pl-1 md:pl-1.5 ${darkMode ? "bg-slate-800/80 border border-slate-700" : "bg-white border border-gray-200"}`}
                   onClick={() => setShowProgressModal(true)}
                   title={`${score} points`}
                 >
-                  <div className="relative drop-shadow-sm flex items-center justify-center mr-2 md:mr-2.5">
-                    {renderIcon(niveauActuel.iconType, niveauActuel.iconColor)}
-                    {niveauActuel.id >= 4 && (
-                      <Sparkles className={`w-2.5 h-2.5 absolute -top-1 -right-1.5 ${darkMode ? "text-current opacity-80" : "text-current animate-pulse-slow"}`} />
-                    )}
+                  <div className={`relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full mr-2 shrink-0 ${darkMode ? "bg-slate-900 border border-slate-700 shadow-inner" : "bg-gray-50 border border-gray-100 shadow-sm"}`}>
+                    <div className="transform scale-[0.85] md:scale-[0.9]">
+                      {renderIcon(niveauActuel.iconType, niveauActuel.iconColor)}
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <span className="font-bold text-sm mr-2 hidden sm:block">
-                      {niveauActuel.nom}
-                    </span>
-                    <div className="flex items-center bg-black/5 dark:bg-white/10 px-2 py-0.5 rounded-lg border border-black/5 dark:border-white/5">
-                      <span className="font-bold text-xs md:text-sm">
-                        {score}
+                  <div className="flex flex-col justify-center">
+                    <div className="flex items-center gap-1.5 leading-none">
+                      <span className={`text-[10px] md:text-[10px] font-bold uppercase tracking-widest hidden lg:block ${darkMode ? "text-slate-400" : "text-gray-500"} mb-0.5`}>
+                        Niv {niveauActuel.id}
+                      </span>
+                      <span className={`px-1.5 py-0.5 rounded text-[10px] md:text-[10px] font-bold uppercase tracking-wider sm:mb-0.5 ${darkMode ? "bg-blue-500/10 text-blue-400" : "bg-blue-50 text-blue-600"}`}>
+                        {score} pts
                       </span>
                     </div>
+                    <span className={`font-black text-[13px] md:text-[14px] leading-none tracking-tight hidden sm:block ${darkMode ? "text-white" : "text-gray-800"}`}>
+                      {niveauActuel.nom}
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* Dark Mode Toggle */}
+            {/* Right side - Dark Mode Toggle */}
+            <div className="flex-1 flex items-center justify-center xl:justify-end mt-2 xl:mt-0">
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className={`p-2 rounded-full transition-all duration-300 ml-2 md:ml-4 ${
+                className={`h-10 w-10 md:h-11 md:w-11 flex items-center justify-center rounded-full transition-all duration-300 ${
                   darkMode
                     ? "text-yellow-500 hover:bg-gray-800/80"
                     : "text-gray-500 hover:bg-gray-200/50 hover:text-gray-700"
                 }`}
                 title={darkMode ? "Mode Clair" : "Mode Sombre"}
               >
-                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {darkMode ? <Sun className="w-5 h-5 md:w-6 md:h-6" /> : <Moon className="w-5 h-5 md:w-6 md:h-6" />}
               </button>
             </div>
-
           </div>
         </div>
       </div>
@@ -1652,8 +1663,8 @@ const ChainesInfoEnergie = () => {
                 <CommunicateDistributeLink darkMode={darkMode} />
 
                 <div
-                  className={`p-6 rounded-lg transform hover:scale-[1.02] transition-transform duration-300 ${
-                    darkMode ? "bg-red-900" : "bg-red-50"
+                  className={`p-6 md:p-8 rounded-3xl shadow-sm border transition-all duration-300 ${
+                    darkMode ? "bg-zinc-900/50 border-red-900/50" : "bg-white border-red-100/50"
                   }`}
                 >
                   <div className="flex items-center mb-4">

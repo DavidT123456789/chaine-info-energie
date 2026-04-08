@@ -79,9 +79,14 @@ export const SuccessAnimation = React.memo(({ successAnimation }: any) => {
   if (!successAnimation) return null
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-      <div className="bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-2xl shadow-2xl animate-bounce">
-        ✨ {successAnimation.message} ✨
+    <div className="fixed inset-0 pointer-events-none z-[60] flex items-center justify-center">
+      <div className="relative group" style={{ animation: 'scale-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
+        <div className="absolute inset-0 bg-green-400 opacity-20 blur-xl rounded-full"></div>
+        <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-green-600 dark:text-green-400 px-10 py-5 rounded-2xl font-bold text-2xl shadow-2xl border border-green-200/50 dark:border-green-800/50 flex items-center gap-3">
+          <span className="text-3xl animate-bounce" style={{ animationDuration: '2s' }}>✨</span>
+          <span className="tracking-wide bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">{successAnimation.message}</span>
+          <span className="text-3xl animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }}>✨</span>
+        </div>
       </div>
     </div>
   )
@@ -91,12 +96,15 @@ export const PerfectAnimation = React.memo(({ perfectAnimation }: any) => {
   if (!perfectAnimation) return null
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-      <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-12 py-6 rounded-3xl font-bold text-3xl shadow-2xl border-4 border-yellow-300">
-        <div className="flex items-center space-x-4">
-          <Crown className="w-8 h-8 animate-spin" />
-          <span className="animate-pulse">{perfectAnimation.message}</span>
-          <Crown className="w-8 h-8 animate-spin" />
+    <div className="fixed inset-0 pointer-events-none z-[60] flex items-center justify-center">
+      <div className="relative" style={{ animation: 'scale-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}>
+        <div className="absolute inset-0 bg-yellow-400 opacity-30 blur-3xl rounded-full animate-pulse" style={{ animationDuration: '2s' }}></div>
+        <div className="relative bg-gradient-to-br from-white/95 to-amber-50/95 dark:from-slate-900/95 dark:to-slate-800/95 backdrop-blur-xl border border-yellow-300/50 dark:border-yellow-700/50 text-amber-600 dark:text-amber-400 px-14 py-8 rounded-3xl font-black text-4xl shadow-[0_10px_50px_-10px_rgba(251,191,36,0.4)]">
+          <div className="flex items-center space-x-6">
+            <Crown className="w-10 h-10 text-yellow-500" style={{ animation: 'floating 3s ease-in-out infinite' }} />
+            <span className="tracking-wider uppercase bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">{perfectAnimation.message}</span>
+            <Crown className="w-10 h-10 text-yellow-500" style={{ animation: 'floating 3s ease-in-out infinite 1.5s' }} />
+          </div>
         </div>
       </div>
     </div>
@@ -110,53 +118,46 @@ export const GameOverAnimation = React.memo(({ gameOverAnimation }: any) => {
     <div className="fixed inset-0 z-[60] flex items-center justify-center animate-shake" style={{ pointerEvents: 'none' }}>
       {/* Fond avec vignette progressive */}
       <div 
-        className="absolute inset-0"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         style={{
-          background: 'radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.85) 60%, rgba(30,0,0,0.95) 100%)',
           animation: 'modalBackdropIn 0.5s ease-out forwards',
         }}
       />
 
       {/* Contenu central */}
-      <div className="relative text-center" style={{ animation: 'scale-up 0.8s ease-out forwards' }}>
+      <div className="relative text-center p-12 bg-slate-900/80 rounded-3xl border border-red-900/50 shadow-[0_0_100px_rgba(220,38,38,0.2)] backdrop-blur-md" style={{ animation: 'scale-up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}>
         {/* Icône crâne animée */}
         <div className="flex justify-center mb-6">
           <div className="relative">
-            <Skull className="w-24 h-24 text-red-500" style={{ animation: 'floating 2s ease-in-out infinite' }} />
+            <div className="absolute inset-0 bg-red-500 opacity-20 blur-2xl rounded-full"></div>
+            <Skull className="relative z-10 w-24 h-24 text-red-500" style={{ animation: 'floating 2s ease-in-out infinite' }} />
           </div>
         </div>
 
         {/* Texte GAME OVER avec effet gradient */}
         <div 
-          className="text-7xl font-black mb-4 tracking-wider"
-          style={{
-            background: 'linear-gradient(to bottom, #ef4444, #991b1b)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            textShadow: 'none',
-            filter: 'drop-shadow(0 0 30px rgba(239, 68, 68, 0.5))',
-          }}
+          className="text-6xl font-black mb-4 tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-red-400 to-red-700"
         >
           GAME OVER
         </div>
 
         {/* Sous-titre avec cœurs brisés */}
-        <div className="text-2xl text-gray-200 mb-3 flex items-center justify-center space-x-3">
-          <Heart className="w-6 h-6 text-gray-500" />
-          <span>Plus de vies !</span>
-          <Heart className="w-6 h-6 text-gray-500" />
+        <div className="text-xl text-gray-300 mb-8 flex items-center justify-center space-x-3">
+          <Heart className="w-6 h-6 text-slate-700" />
+          <span className="font-semibold uppercase tracking-wide">Plus de vies !</span>
+          <Heart className="w-6 h-6 text-slate-700" />
         </div>
 
         {/* Message de redémarrage */}
-        <div className="flex items-center justify-center space-x-2 text-gray-400 mt-6">
+        <div className="flex items-center justify-center space-x-3 text-red-400 mt-6 bg-red-950/30 py-3 px-6 rounded-full border border-red-900/30">
           <RotateCcw className="w-5 h-5 animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="text-lg">Redémarrage automatique...</span>
+          <span className="font-medium tracking-wide">Redémarrage automatique...</span>
         </div>
 
         {/* Barre de progression du redémarrage */}
-        <div className="mt-4 w-64 mx-auto h-1.5 bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-8 w-64 mx-auto h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
           <div 
-            className="h-full bg-red-500 rounded-full"
+            className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full"
             style={{
               animation: 'gameOverProgress 3s linear forwards',
             }}

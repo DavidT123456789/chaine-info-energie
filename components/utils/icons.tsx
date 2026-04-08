@@ -9,9 +9,10 @@ import {
   CheckCircle,
   Trophy,
   Crown,
+  Heart,
 } from "lucide-react"
 
-type IconType = "BookOpen" | "Cpu" | "Gauge" | "Rocket" | "Book" | "Target" | "Award" | "CheckCircle" | "Trophy" | "Crown"
+type IconType = "BookOpen" | "Cpu" | "Gauge" | "Rocket" | "Book" | "Target" | "Award" | "CheckCircle" | "Trophy" | "Crown" | "Heart"
 
 const iconMap: Record<IconType, typeof BookOpen> = {
   BookOpen,
@@ -24,6 +25,7 @@ const iconMap: Record<IconType, typeof BookOpen> = {
   CheckCircle,
   Trophy,
   Crown,
+  Heart,
 }
 
 export function renderIcon(iconType: IconType, className: string) {
