@@ -676,6 +676,11 @@ const ChainesInfoEnergie = () => {
     localStorage.setItem("chainesInfoEnergie_darkMode", JSON.stringify(darkMode))
   }, [darkMode])
 
+  // Scroll en haut de page lors d'un changement d'étape ou d'exercice
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }, [currentMode, currentExercise])
+
   // Refs to track notifications that have already been triggered (prevent duplicates)
   const notifiedLevelsRef = useRef<Set<number>>(new Set())
   const notifiedBadgesRef = useRef<Set<string>>(new Set())
