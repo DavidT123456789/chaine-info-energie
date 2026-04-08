@@ -1,0 +1,372 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Animation pour l'effet de secousse */
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Animation pour l'effet flottant des éléments sélectionnés */
+@keyframes floating {
+  0% {
+    transform: translateY(0) scale(1.1) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) scale(1.1) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(0) scale(1.1) rotate(0deg);
+  }
+  75% {
+    transform: translateY(5px) scale(1.1) rotate(1deg);
+  }
+  100% {
+    transform: translateY(0) scale(1.1) rotate(0deg);
+  }
+}
+
+.floating-animation {
+  animation: floating 2s ease-in-out infinite;
+}
+
+/* Animations pour les pulsations des cœurs */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse-medium {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes pulse-fast {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-pulse-medium {
+  animation: pulse-medium 1.5s ease-in-out infinite;
+}
+
+.animate-pulse-fast {
+  animation: pulse-fast 0.7s ease-in-out infinite;
+}
+
+/* Animation pour l'effet d'apparition des badges et niveaux */
+@keyframes scale-up {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-scale-up {
+  animation: scale-up 0.5s ease-out forwards;
+}
+
+/* Animations pour les notifications */
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Animation pour les confettis */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Animations pour les effets d'erreur et de succès */
+@keyframes heartBreak {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2) rotate(10deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.8) rotate(45deg) translateY(50px);
+    opacity: 0;
+  }
+}
+
+@keyframes errorMessage {
+  0% {
+    transform: scale(0.8) translateY(-20px);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1.1) translateY(0px);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
+  }
+}
+
+/* Animation pour l'effet de brillance */
+@keyframes glow {
+  from {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+  }
+  to {
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.8);
+  }
+}
+
+/* Animation fade-in pour le titre */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 1s ease-out;
+}
+
+/* === RESPONSIVE CHAIN LAYOUT === */
+@media (max-width: 900px) {
+  .chain-responsive {
+    flex-wrap: wrap !important;
+    gap: 0.5rem;
+  }
+  .chain-responsive .drop-zone-item {
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .chain-responsive {
+    flex-direction: column !important;
+    align-items: center;
+  }
+  .chain-responsive .chain-arrow {
+    transform: rotate(90deg);
+  }
+}
+
+/* === GLOW EFFECT ON DROP ZONES WHEN ELEMENT SELECTED === */
+@keyframes drop-zone-glow {
+  0% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+  100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); }
+}
+
+.drop-zone-glow {
+  animation: drop-zone-glow 1.5s ease-in-out infinite;
+  border-color: rgba(59, 130, 246, 0.5) !important;
+}
+
+/* === SHAKE ANIMATION ON ERROR === */
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+/* === ERROR FEEDBACK OVERLAY === */
+@keyframes errorFeedback {
+  0% { transform: translateY(20px) scale(0.9); opacity: 0; }
+  10% { transform: translateY(0) scale(1.02); opacity: 1; }
+  85% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-10px) scale(0.95); opacity: 0; }
+}
+
+.animate-error-feedback {
+  animation: errorFeedback 3.5s ease-out forwards;
+}
+
+/* === INTRO CARD ANIMATION === */
+@keyframes introSlideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-intro-slide {
+  animation: introSlideDown 0.6s ease-out forwards;
+}
+
+/* === STAGGER ANIMATION FOR ELEMENT CARDS === */
+@keyframes staggerFadeIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.stagger-item {
+  animation: staggerFadeIn 0.3s ease-out forwards;
+  opacity: 0;
+}
+
+/* === CONFIRM MODAL BACKDROP === */
+@keyframes modalBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-modal-backdrop {
+  animation: modalBackdropIn 0.2s ease-out forwards;
+}
+
+/* === GAME OVER PROGRESS BAR === */
+@keyframes gameOverProgress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
