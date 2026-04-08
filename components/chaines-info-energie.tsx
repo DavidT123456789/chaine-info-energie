@@ -175,6 +175,7 @@ const ChainesInfoEnergie = () => {
   const previousExercicesLength = useRef<number>(0)
   const [confetti, setConfetti] = useState([])
   const [darkMode, setDarkMode] = useState(false)
+  const errorFeedbackTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Debounced heart loss animation trigger - prevents double animations
   const triggerHeartLossAnimation = useCallback((x: number, y: number) => {
@@ -918,7 +919,17 @@ const ChainesInfoEnergie = () => {
           message: "Cet élément ne va pas ici !",
           correct: hint
         })
-        setTimeout(() => setErrorFeedback(null), 4000)
+        
+        // Clear before setting a new timeout so they don't overlap
+        if (errorFeedbackTimeoutRef.current) {
+          clearTimeout(errorFeedbackTimeoutRef.current)
+        }
+        
+        // Extended to 9000ms
+        errorFeedbackTimeoutRef.current = setTimeout(() => {
+          setErrorFeedback(null)
+          errorFeedbackTimeoutRef.current = null
+        }, 9000)
       }
 
       if (isExercise) {
@@ -1407,9 +1418,27 @@ const ChainesInfoEnergie = () => {
       <GameOverAnimation gameOverAnimation={gameOverAnimation} />
       {errorFeedback && (
         <div className="fixed inset-0 pointer-events-none z-[100] flex items-end justify-center pb-32">
-          <div className="pointer-events-auto bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-5 rounded-2xl shadow-2xl animate-error-feedback max-w-lg text-center border border-red-400">
-            <div className="font-bold text-lg mb-2">❌ {errorFeedback.message}</div>
-            <div className="text-sm opacity-95 bg-white/10 rounded-lg px-4 py-2">💡 {errorFeedback.correct}</div>
+          <div 
+            onClick={() => {
+              setErrorFeedback(null)
+              if (errorFeedbackTimeoutRef.current) {
+                clearTimeout(errorFeedbackTimeoutRef.current)
+                errorFeedbackTimeoutRef.current = null
+              }
+            }}
+            className="pointer-events-auto cursor-pointer bg-red-600/80 backdrop-blur-xl text-white px-8 py-5 rounded-3xl shadow-[0_10px_40px_rgb(220,38,38,0.3)] animate-error-feedback max-w-lg text-center border border-white/20 transition-all hover:bg-red-600/90 group"
+          >
+            <div className="font-bold text-lg mb-3 flex items-center justify-center gap-2">
+              <XCircle className="w-6 h-6 text-red-200" />
+              {errorFeedback.message}
+            </div>
+            <div className="text-sm opacity-100 bg-black/20 backdrop-blur-md rounded-2xl px-5 py-3 border border-white/10 flex items-start gap-3 text-left">
+              <Lightbulb className="w-5 h-5 text-yellow-300 shrink-0" />
+              <span className="leading-relaxed">{errorFeedback.correct}</span>
+            </div>
+            <div className="mt-3 text-[10px] text-red-200/60 uppercase tracking-widest font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+              Cliquer pour fermer
+            </div>
           </div>
         </div>
       )}
