@@ -2,7 +2,7 @@ export const badges = [
   {
     id: "lecon_complete",
     nom: "Théoricien",
-    description: "Compléter la leçon",
+    description: "Maîtriser les fonctions théoriques des chaînes",
     iconType: "Book" as const,
     iconColor: "text-blue-600 dark:text-blue-400",
     couleur: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900 dark:text-blue-200 dark:border-blue-700",
@@ -41,8 +41,8 @@ export const badges = [
   },
   {
     id: "prevoyant",
-    nom: "Prévoyant",
-    description: "Acheter un cœur supplémentaire",
+    nom: "Persévérant",
+    description: "Acheter un cœur pour poursuivre l'aventure",
     iconType: "Heart" as const,
     iconColor: "text-red-600 dark:text-red-400",
     couleur: "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-200 dark:border-red-700",

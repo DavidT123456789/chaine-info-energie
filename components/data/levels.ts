@@ -11,7 +11,7 @@ export const niveaux = [
   {
     id: 2,
     nom: "Apprenti",
-    scoreRequis: 100,
+    scoreRequis: 150,
     couleur: "bg-gradient-to-br from-blue-50 to-cyan-100 text-blue-800 border border-blue-200 dark:from-blue-950/40 dark:to-cyan-900/40 dark:text-blue-300 dark:border-blue-800/50",
     iconType: "Cpu" as const,
     iconColor: "text-blue-600 dark:text-blue-400",
@@ -20,7 +20,7 @@ export const niveaux = [
   {
     id: 3,
     nom: "Confirmé",
-    scoreRequis: 300,
+    scoreRequis: 450,
     couleur: "bg-gradient-to-br from-purple-50 to-fuchsia-100 text-purple-800 border border-purple-200 dark:from-purple-950/40 dark:to-fuchsia-900/40 dark:text-purple-300 dark:border-purple-800/50",
     iconType: "Gauge" as const,
     iconColor: "text-purple-600 dark:text-purple-400",
@@ -29,7 +29,7 @@ export const niveaux = [
   {
     id: 4,
     nom: "Expert",
-    scoreRequis: 600,
+    scoreRequis: 850,
     couleur: "bg-gradient-to-br from-orange-50 to-amber-100 text-orange-800 border border-orange-200 dark:from-orange-950/40 dark:to-amber-900/40 dark:text-orange-300 dark:border-orange-800/50",
     iconType: "Rocket" as const,
     iconColor: "text-orange-600 dark:text-orange-400",
@@ -38,7 +38,7 @@ export const niveaux = [
   {
     id: 5,
     nom: "Maître",
-    scoreRequis: 900,
+    scoreRequis: 1350,
     couleur: "bg-gradient-to-br from-amber-100 to-yellow-200 text-amber-900 border border-yellow-300 dark:from-yellow-900/50 dark:to-amber-800/50 dark:text-yellow-300 dark:border-yellow-700/50 shadow-sm",
     iconType: "Crown" as const,
     iconColor: "text-amber-600 dark:text-amber-400",

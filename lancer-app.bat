@@ -7,6 +7,12 @@ echo   Demarrage de l'application...
 echo ============================================
 echo.
 
+:: Liberer le port 3000 si un ancien processus l'occupe
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":3000" ^| findstr "LISTENING" 2^>nul') do (
+    echo [!] Port 3000 occupe par le processus %%a, arret en cours...
+    taskkill /PID %%a /F >nul 2>&1
+)
+
 if not exist "node_modules" (
     echo [1/2] Installation des dependances...
     echo       Cela peut prendre quelques minutes.

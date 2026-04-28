@@ -83,7 +83,7 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
       </div>
 
       {(!isUsed && (element.definition || element.role)) && (
-        <div className={`absolute bottom-full mb-4 left-1/2 min-w-64 max-w-sm -translate-x-1/2 p-5 rounded-2xl z-[60] transition-all duration-400 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom pointer-events-none ${darkMode ? "bg-slate-800/95 backdrop-blur-xl border border-slate-700/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.5)]" : "bg-white/95 backdrop-blur-xl border border-slate-200/50 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"} ${isSelected ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible translate-y-3 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100"}`}>
+        <div className={`absolute bottom-full mb-4 left-1/2 min-w-64 max-w-sm -translate-x-1/2 p-5 rounded-2xl z-[9999] transition-all duration-400 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom pointer-events-none ${darkMode ? "bg-slate-800 border border-slate-700/50 text-white shadow-[0_8px_30px_rgb(0,0,0,0.5)]" : "bg-white border border-slate-200/50 text-slate-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"} ${isSelected ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible translate-y-3 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100"}`}>
           {element.definition && (
             <div className={`text-sm mb-2 text-left ${darkMode ? "text-slate-300" : "text-slate-600"}`}>
               <strong className={darkMode ? "text-blue-400" : "text-blue-600"}>Définition :</strong> {element.definition}
@@ -112,18 +112,70 @@ const ChainArrows = ({ chainType }: { chainType: string }) => {
   )
 }
 
-const CommunicateDistributeLink = ({ darkMode }: { darkMode: boolean }) => {
+const CommunicateDistributeLink = ({ darkMode, isConnectionActive }: { darkMode: boolean, isConnectionActive: boolean }) => {
   return (
-    <div className="relative h-16 flex justify-center">
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 h-full bg-green-500">
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1 rotate-45 w-3 h-3 border-b-2 border-r-2 border-green-500"></div>
-      </div>
-      <div
-        className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 px-3 py-1 flex items-center justify-center rounded-full z-10 shadow-sm transition-colors duration-300 ${
-          darkMode ? "bg-green-900 border border-green-700" : "bg-green-100 border border-green-300"
-        }`}
-      >
-        <span className={`text-[11px] leading-none font-bold uppercase tracking-wider mb-[1px] ${darkMode ? "text-green-300" : "text-green-700"}`}>ORDRE</span>
+    <div className="relative w-full pointer-events-none z-10" style={{ height: '100px' }}>
+      {/* Connection SVG — fixed 1080px width so it precisely matches the centered Energy chain below */}
+      <svg width="1080" height="156" viewBox="0 0 1080 156" className="pointer-events-none overflow-visible absolute" style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}>
+        <defs>
+          <linearGradient id="active-flow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor={darkMode ? "#60a5fa" : "#3b82f6"} />
+            <stop offset="50%" stopColor={darkMode ? "#a78bfa" : "#8b5cf6"} />
+            <stop offset="100%" stopColor={darkMode ? "#f87171" : "#ef4444"} />
+          </linearGradient>
+          <filter id="glow-connection" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        {/* Static dashed cable */}
+        <path
+          d="M 752 0 C 752 78, 448 78, 448 156"
+          fill="none"
+          stroke={darkMode ? "rgba(148,163,184,0.15)" : "rgba(148,163,184,0.25)"}
+          strokeWidth="2"
+          strokeDasharray="6 4"
+        />
+        {/* Glowing active cable with gradient */}
+        {isConnectionActive && (
+          <>
+            <path
+              d="M 752 0 C 752 78, 448 78, 448 156"
+              fill="none"
+              stroke="url(#active-flow)"
+              strokeWidth="3"
+              filter="url(#glow-connection)"
+              className="transition-opacity duration-500"
+            />
+            {/* Animated data particle 1 */}
+            <circle r="4" fill="white" filter="url(#glow-connection)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path="M 752 0 C 752 78, 448 78, 448 156" rotate="auto" />
+              <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" />
+            </circle>
+            {/* Animated data particle 2 — staggered */}
+            <circle r="3" fill="white" opacity="0.7" filter="url(#glow-connection)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s" path="M 752 0 C 752 78, 448 78, 448 156" rotate="auto" />
+              <animate attributeName="opacity" values="0;0.7;0.7;0" dur="1.8s" repeatCount="indefinite" begin="0.9s" />
+            </circle>
+          </>
+        )}
+      </svg>
+      {/* Ordres Label */}
+      <div className="absolute z-20 -translate-x-1/2 -translate-y-1/2 pointer-events-auto" style={{ top: '78px', left: 'calc(50% + 60px)' }}>
+        <div className={`px-4 py-1.5 rounded-full border flex items-center justify-center transition-all duration-500 ${
+          isConnectionActive
+            ? (darkMode ? "bg-purple-900/40 border-purple-500/40 backdrop-blur-md" : "bg-purple-50/60 border-purple-300/60 backdrop-blur-md")
+            : (darkMode ? "bg-slate-800/40 border-slate-600/40 backdrop-blur-md" : "bg-slate-50/60 border-slate-300/60 backdrop-blur-md")
+        }`}>
+          <span className={`text-[11px] leading-none font-bold uppercase tracking-[0.15em] ${
+            isConnectionActive
+              ? (darkMode ? "text-purple-300" : "text-purple-600")
+              : (darkMode ? "text-slate-500" : "text-slate-500")
+          }`}>ORDRES</span>
+        </div>
       </div>
     </div>
   )
@@ -177,6 +229,15 @@ const ChainesInfoEnergie = () => {
   const [darkMode, setDarkMode] = useState(false)
   const errorFeedbackTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Shared AudioContext — browsers limit simultaneous instances
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const getOrCreateAudioContext = useCallback(() => {
+    if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)()
+    }
+    return audioContextRef.current
+  }, [])
+
   // Debounced heart loss animation trigger - prevents double animations
   const triggerHeartLossAnimation = useCallback((x: number, y: number) => {
     const now = Date.now()
@@ -217,7 +278,7 @@ const ChainesInfoEnergie = () => {
         if (type === "level" && n.type === "level") {
           return n.data.id === data.id
         }
-        if (type === "bonus" && n.type === "bonus") {
+        if ((type === "bonus" || type === "info") && n.type === type) {
           return n.data.message === data.message
         }
         return false
@@ -348,17 +409,21 @@ const ChainesInfoEnergie = () => {
 
   const createConfetti = useCallback(() => {
     const newConfetti = []
-    for (let i = 0; i < 50; i++) {
+    const colors = ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#9D4EDD", "#FF9E00"]
+    const shapes = ["square", "circle", "rectangle"]
+    for (let i = 0; i < 80; i++) {
+      const angle = (Math.PI * 2 * i) / 80 + (Math.random() - 0.5) * 0.5
+      const velocity = 150 + Math.random() * 350
+      const shape = shapes[Math.floor(Math.random() * shapes.length)]
       newConfetti.push({
         id: Math.random(),
-        x: Math.random() * window.innerWidth,
-        y: -10,
-        vx: (Math.random() - 0.5) * 4,
-        vy: Math.random() * 3 + 2,
-        color: ["#FFD700", "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7"][Math.floor(Math.random() * 6)],
-        size: Math.random() * 8 + 4,
-        rotation: Math.random() * 360,
-        rotationSpeed: (Math.random() - 0.5) * 10,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        width: shape === "rectangle" ? Math.random() * 6 + 3 : Math.random() * 10 + 5,
+        height: shape === "rectangle" ? Math.random() * 14 + 8 : Math.random() * 10 + 5,
+        shape,
+        tx: Math.cos(angle) * velocity,
+        ty: Math.sin(angle) * velocity - 100,
+        duration: 1.2 + Math.random() * 0.8,
       })
     }
     setConfetti(newConfetti)
@@ -402,7 +467,7 @@ const ChainesInfoEnergie = () => {
   }, [])
 
   const playZeldaChestSound = useCallback(() => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const audioContext = getOrCreateAudioContext()
 
     const notes = [
       { freq: 523.25, time: 0.0, duration: 0.3 },
@@ -456,10 +521,10 @@ const ChainesInfoEnergie = () => {
         osc.stop(startTime + note.duration * 1.5)
       })
     }, 200)
-  }, [])
+  }, [getOrCreateAudioContext])
 
   const playSuccessSound = useCallback(() => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const audioContext = getOrCreateAudioContext()
 
     const osc1 = audioContext.createOscillator()
     const osc2 = audioContext.createOscillator()
@@ -504,10 +569,10 @@ const ChainesInfoEnergie = () => {
     osc1.stop(now + 0.6)
     osc2.stop(now + 0.6)
     osc3.stop(now + 0.6)
-  }, [])
+  }, [getOrCreateAudioContext])
 
   const playErrorSound = useCallback(() => {
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)()
+    const audioContext = getOrCreateAudioContext()
 
     const osc1 = audioContext.createOscillator()
     const osc2 = audioContext.createOscillator()
@@ -562,7 +627,7 @@ const ChainesInfoEnergie = () => {
     osc1.stop(now + 0.4)
     osc2.stop(now + 0.4)
     noiseSource.stop(now + 0.1)
-  }, [])
+  }, [getOrCreateAudioContext])
 
   useEffect(() => {
     if (exercicesTermines.length >= 3 && previousExercicesLength.current < 3) {
@@ -589,6 +654,7 @@ const ChainesInfoEnergie = () => {
     const savedExercicesTermines = localStorage.getItem("chainesInfoEnergie_exercicesTermines")
     const savedExercicesDebloques = localStorage.getItem("chainesInfoEnergie_exercicesDebloques")
     const savedDarkMode = localStorage.getItem("chainesInfoEnergie_darkMode")
+    const savedDevMode = localStorage.getItem("chainesInfoEnergie_devModeUnlocked")
 
     if (savedScore) setScore(Number.parseInt(savedScore))
     if (savedBadges) setBadgesObtenus(JSON.parse(savedBadges))
@@ -596,6 +662,7 @@ const ChainesInfoEnergie = () => {
     if (savedExercicesTermines) setExercicesTermines(JSON.parse(savedExercicesTermines))
     if (savedExercicesDebloques) setExercicesDebloques(JSON.parse(savedExercicesDebloques))
     if (savedDarkMode) setDarkMode(JSON.parse(savedDarkMode))
+    if (savedDevMode) setDevModeUnlocked(JSON.parse(savedDevMode))
   }, [shuffleArray])
 
 
@@ -675,6 +742,10 @@ const ChainesInfoEnergie = () => {
   useEffect(() => {
     localStorage.setItem("chainesInfoEnergie_darkMode", JSON.stringify(darkMode))
   }, [darkMode])
+
+  useEffect(() => {
+    localStorage.setItem("chainesInfoEnergie_devModeUnlocked", JSON.stringify(devModeUnlocked))
+  }, [devModeUnlocked])
 
   // Scroll en haut de page lors d'un changement d'étape ou d'exercice
   useEffect(() => {
@@ -760,7 +831,7 @@ const ChainesInfoEnergie = () => {
       verifierBadge("score_1000")
     }
 
-    const autresBadges = badges.filter((b) => b.id !== "maitrise_totale").map((b) => b.id)
+    const autresBadges = badges.filter((b) => b.id !== "maitrise_totale" && b.id !== "prevoyant").map((b) => b.id)
     const tousAutresBadgesObtenus = autresBadges.every((badgeId) => badgesObtenus.includes(badgeId))
     const niveauMaxAtteint = niveau === niveaux[niveaux.length - 1].id
 
@@ -1360,18 +1431,17 @@ const ChainesInfoEnergie = () => {
       const buttonText = isResuming ? `Reprendre l'exercice ${exerciseNumber}` : "Exercice 2";
 
       return (
-        <div className="fixed bottom-4 right-4 z-40">
+        <div className="fixed bottom-6 right-6 z-40">
           <button
             onClick={() => setCurrentMode("exercises")}
-            className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 animate-pulse-slow ${
+            className={`group px-7 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 ${
               darkMode
-                ? "bg-green-800 text-green-200 border border-green-600 hover:bg-green-700 shadow-lg"
-                : "bg-green-600 text-white hover:bg-green-700 shadow-lg"
+                ? "bg-blue-500/15 backdrop-blur-md text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-500/40"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
-            style={{ boxShadow: "0 0 20px rgba(34, 197, 94, 0.5)" }}
           >
             <span>{buttonText}</span>
-            <ChevronRight className="w-5 h-5" />
+            <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" />
           </button>
         </div>
       )
@@ -1386,24 +1456,21 @@ const ChainesInfoEnergie = () => {
     if (!hasNextExercise || !isNextUnlocked) return null
 
     return (
-      <div className="fixed bottom-4 right-4 z-40 animate-fade-in">
+      <div className="fixed bottom-6 right-6 z-40 animate-fade-in">
         <button
           onClick={() => {
             setCurrentExercise(nextExerciseIndex)
             setSelectedElement(null)
             setShowNextExercise(false)
           }}
-          className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 shadow-lg animate-pulse-slow ${
+          className={`group px-7 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 ${
             darkMode
-              ? "bg-green-800 text-green-200 border border-green-600 hover:bg-green-700"
-              : "bg-green-600 text-white hover:bg-green-700"
+              ? "bg-blue-500/15 backdrop-blur-md text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-500/40"
+              : "bg-blue-600 text-white hover:bg-blue-700"
           }`}
-          style={{
-            boxShadow: "0 0 20px rgba(34, 197, 94, 0.5)",
-          }}
         >
           <span>Exercice {nextExerciseIndex + 2}</span>
-          <ChevronRight className="w-5 h-5 ml-1" />
+          <ChevronRight className="w-5 h-5 ml-1 transition-transform duration-300 group-hover:translate-x-0.5" />
         </button>
       </div>
     )
@@ -1642,56 +1709,71 @@ const ChainesInfoEnergie = () => {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-0">
                 <div
-                  className={`p-6 md:p-8 rounded-3xl shadow-sm border transition-all duration-300 ${
-                    darkMode ? "bg-zinc-900/50 border-blue-900/50" : "bg-white border-blue-100/50"
+                  className={`p-6 md:p-8 rounded-3xl shadow-xl border transition-all duration-300 relative ${
+                    darkMode ? "bg-zinc-900/50 border-slate-700/50" : "bg-white border-slate-200/50"
                   }`}
                 >
-                  <div className="flex items-center mb-4">
-                    <Lightbulb className={`mr-2 w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-500"}`} />
-                    <h3 className={`text-xl font-bold ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
-                      Chaîne d'Information
-                    </h3>
+                  {/* Background pattern */}
+                  <div className={`absolute inset-0 rounded-3xl overflow-hidden pointer-events-none ${darkMode ? "opacity-5" : "opacity-[0.03]"}`}>
+                    <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                   </div>
 
-                  <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    {renderDropZone("info", 0)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 1)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 2)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 3)}
-                  </div>
-                </div>
+                  <div className="overflow-x-auto pb-6 -mt-16 pt-16 -mx-6 px-6 relative z-10 scrollbar-hide pointer-events-none">
+                    <div className="min-w-max relative py-4 px-4 flex flex-col gap-0 items-center pointer-events-auto">
+                      {/* Info Chain */}
+                      <div className="relative z-30 w-full">
+                        <div className="flex items-center mb-4 ml-2 h-10">
+                          <Lightbulb className={`mr-2 w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-500"}`} />
+                          <h3 className={`text-xl font-bold ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
+                            Chaîne d'Information
+                          </h3>
+                        </div>
+                        <div className="flex justify-center items-center chain-responsive">
+                          {renderDropZone("info", 0)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 1)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 2)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 3)}
+                          <ChainArrows chainType="info" />
+                          {/* Messages — external output element */}
+                          <div className={`flex-shrink-0 px-5 py-3 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
+                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
+                          }`}>
+                            Messages
+                          </div>
+                        </div>
+                      </div>
 
-                <CommunicateDistributeLink darkMode={darkMode} />
+                      {/* Connection */}
+                      <CommunicateDistributeLink darkMode={darkMode} isConnectionActive={lessonChains.info[3] !== null && lessonChains.energy[2] !== null} />
 
-                <div
-                  className={`p-6 md:p-8 rounded-3xl shadow-sm border transition-all duration-300 ${
-                    darkMode ? "bg-zinc-900/50 border-red-900/50" : "bg-white border-red-100/50"
-                  }`}
-                >
-                  <div className="flex items-center mb-4">
-                    <Zap className={`mr-2 w-6 h-6 ${darkMode ? "text-red-400" : "text-red-500"}`} />
-                    <h3 className={`text-xl font-bold ${darkMode ? "text-red-300" : "text-red-700"}`}>
-                      Chaîne d'Énergie
-                    </h3>
-                  </div>
-
-                  <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    {renderDropZone("energy", 0)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 1)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 2)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 3)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 4)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 5)}
+                      {/* Energy Chain */}
+                      <div className="relative z-30 w-full">
+                        <div className="flex items-center mb-4 ml-2 h-10">
+                          <Zap className={`mr-2 w-6 h-6 ${darkMode ? "text-red-400" : "text-red-500"}`} />
+                          <h3 className={`text-xl font-bold ${darkMode ? "text-red-300" : "text-red-700"}`}>
+                            Chaîne d'Énergie
+                          </h3>
+                        </div>
+                        <div className="flex justify-center items-center chain-responsive">
+                          {renderDropZone("energy", 0)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 1)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 2)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 3)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 4)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 5)}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1728,56 +1810,75 @@ const ChainesInfoEnergie = () => {
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-0">
                 <div
-                  className={`p-6 md:p-8 rounded-3xl shadow-sm border transition-all duration-300 ${
-                    darkMode ? "bg-zinc-900/50 border-blue-900/50" : "bg-white border-blue-100/50"
+                  className={`p-6 md:p-8 rounded-3xl shadow-xl border transition-all duration-300 relative ${
+                    darkMode ? "bg-zinc-900/50 border-slate-700/50" : "bg-white border-slate-200/50"
                   }`}
                 >
-                  <div className="flex items-center mb-4">
-                    <Lightbulb className={`mr-2 w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-500"}`} />
-                    <h3 className={`text-xl font-bold ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
-                      Chaîne d'Information
-                    </h3>
+                  {/* Background pattern */}
+                  <div className={`absolute inset-0 rounded-3xl overflow-hidden pointer-events-none ${darkMode ? "opacity-5" : "opacity-[0.03]"}`}>
+                    <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                   </div>
 
-                  <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    {renderDropZone("info", 0, true)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 1, true)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 2, true)}
-                    <ChainArrows chainType="info" />
-                    {renderDropZone("info", 3, true)}
-                  </div>
-                </div>
+                  <div className="overflow-x-auto pb-6 -mt-16 pt-16 -mx-6 px-6 relative z-10 scrollbar-hide pointer-events-none">
+                    <div className="min-w-max relative py-4 px-4 flex flex-col gap-0 items-center pointer-events-auto">
+                      {/* Info Chain */}
+                      <div className="relative z-30 w-full">
+                        <div className="flex items-center mb-4 ml-2 h-10">
+                          <Lightbulb className={`mr-2 w-6 h-6 ${darkMode ? "text-blue-400" : "text-blue-500"}`} />
+                          <h3 className={`text-xl font-bold ${darkMode ? "text-blue-300" : "text-blue-700"}`}>
+                            Chaîne d'Information
+                          </h3>
+                        </div>
+                        <div className="flex justify-center items-center chain-responsive">
+                          {renderDropZone("info", 0, true)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 1, true)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 2, true)}
+                          <ChainArrows chainType="info" />
+                          {renderDropZone("info", 3, true)}
+                          <ChainArrows chainType="info" />
+                          {/* Messages — external output element */}
+                          <div className={`flex-shrink-0 px-5 py-3 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
+                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
+                          }`}>
+                            Messages
+                          </div>
+                        </div>
+                      </div>
 
-                <CommunicateDistributeLink darkMode={darkMode} />
+                      {/* Connection */}
+                      <CommunicateDistributeLink darkMode={darkMode} isConnectionActive={exercises[currentExercise].elements.some(
+                        (el: any) => el.chain === "info" && el.position === 3 && completedExercises.includes(`${currentExercise}-${el.name}`)
+                      ) && exercises[currentExercise].elements.some(
+                        (el: any) => el.chain === "energy" && el.position === 2 && completedExercises.includes(`${currentExercise}-${el.name}`)
+                      )} />
 
-                <div
-                  className={`p-6 md:p-8 rounded-3xl shadow-sm border transition-all duration-300 ${
-                    darkMode ? "bg-zinc-900/50 border-red-900/50" : "bg-white border-red-100/50"
-                  }`}
-                >
-                  <div className="flex items-center mb-4">
-                    <Zap className={`mr-2 w-6 h-6 ${darkMode ? "text-red-400" : "text-red-500"}`} />
-                    <h3 className={`text-xl font-bold ${darkMode ? "text-red-300" : "text-red-700"}`}>
-                      Chaîne d'Énergie
-                    </h3>
-                  </div>
-
-                  <div className="flex justify-center items-center chain-responsive overflow-x-auto pt-32 -mt-28 pb-4">
-                    {renderDropZone("energy", 0, true)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 1, true)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 2, true)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 3, true)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 4, true)}
-                    <ChainArrows chainType="energy" />
-                    {renderDropZone("energy", 5, true)}
+                      {/* Energy Chain */}
+                      <div className="relative z-30 w-full">
+                        <div className="flex items-center mb-4 ml-2 h-10">
+                          <Zap className={`mr-2 w-6 h-6 ${darkMode ? "text-red-400" : "text-red-500"}`} />
+                          <h3 className={`text-xl font-bold ${darkMode ? "text-red-300" : "text-red-700"}`}>
+                            Chaîne d'Énergie
+                          </h3>
+                        </div>
+                        <div className="flex justify-center items-center chain-responsive">
+                          {renderDropZone("energy", 0, true)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 1, true)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 2, true)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 3, true)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 4, true)}
+                          <ChainArrows chainType="energy" />
+                          {renderDropZone("energy", 5, true)}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

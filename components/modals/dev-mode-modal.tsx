@@ -42,7 +42,7 @@ export const DevModeModal = React.memo(({
                   darkMode ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-900"
                 }`}
                 placeholder="Entrez le mot de passe"
-                onKeyPress={(e) => e.key === "Enter" && handleDevPassword()}
+                onKeyDown={(e) => e.key === "Enter" && handleDevPassword()}
                 autoFocus
               />
             </div>

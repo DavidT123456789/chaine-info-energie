@@ -1,5 +1,5 @@
 import React from "react"
-import { Heart, Crown, RotateCcw, Skull, HeartCrack } from "lucide-react"
+import { Heart, Crown, RotateCcw, Skull, HeartCrack, CheckCircle2 } from "lucide-react"
 
 export const ParticleSystem = React.memo(({ particles }: any) => {
   return (
@@ -26,21 +26,23 @@ export const ParticleSystem = React.memo(({ particles }: any) => {
 })
 
 export const ConfettiSystem = React.memo(({ confetti }: any) => {
+  if (!confetti || confetti.length === 0) return null;
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <div className="fixed inset-0 pointer-events-none z-[100] flex items-center justify-center">
       {confetti.map((piece: any) => (
         <div
           key={piece.id}
           className="absolute"
           style={{
-            left: piece.x,
-            top: piece.y,
-            width: piece.size,
-            height: piece.size,
+            width: `${piece.width}px`,
+            height: `${piece.height}px`,
             backgroundColor: piece.color,
-            transform: `rotate(${piece.rotation}deg)`,
-            animation: `confetti-fall 3s linear forwards`,
-          }}
+            borderRadius: piece.shape === "circle" ? "50%" : "2px",
+            '--tx': `${piece.tx}px`,
+            '--ty': `${piece.ty}px`,
+            animation: `confetti-explode ${piece.duration}s cubic-bezier(0.25, 1, 0.5, 1) forwards`,
+          } as React.CSSProperties}
         />
       ))}
     </div>
@@ -94,12 +96,15 @@ export const SuccessAnimation = React.memo(({ successAnimation }: any) => {
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[60] flex items-center justify-center">
-      <div className="relative group" style={{ animation: 'scale-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards' }}>
-        <div className="absolute inset-0 bg-green-400 opacity-20 blur-xl rounded-full"></div>
-        <div className="relative bg-white/95 dark:bg-slate-900/95 backdrop-blur-md text-green-600 dark:text-green-400 px-10 py-5 rounded-2xl font-bold text-2xl shadow-2xl border border-green-200/50 dark:border-green-800/50 flex items-center gap-4">
-          <Heart className="w-8 h-8 text-green-500 fill-green-500 animate-bounce" style={{ animationDuration: '2s' }} />
-          <span className="tracking-wide bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">{successAnimation.message}</span>
-          <Heart className="w-8 h-8 text-green-500 fill-green-500 animate-bounce" style={{ animationDuration: '2s', animationDelay: '0.5s' }} />
+      <div 
+        className="relative" 
+        style={{ animation: 'scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
+      >
+        <div className="bg-white dark:bg-slate-800 px-6 py-3 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-slate-200 dark:border-slate-700 flex items-center gap-2.5">
+          <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+          <span className="font-medium text-[15px] text-slate-800 dark:text-slate-100">
+            {successAnimation.message}
+          </span>
         </div>
       </div>
     </div>
@@ -110,14 +115,15 @@ export const PerfectAnimation = React.memo(({ perfectAnimation }: any) => {
   if (!perfectAnimation) return null
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-[60] flex items-center justify-center">
-      <div className="relative" style={{ animation: 'scale-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}>
-        <div className="absolute inset-0 bg-yellow-400 opacity-30 blur-3xl rounded-full animate-pulse" style={{ animationDuration: '2s' }}></div>
-        <div className="relative bg-gradient-to-br from-white/95 to-amber-50/95 dark:from-slate-900/95 dark:to-slate-800/95 backdrop-blur-xl border border-yellow-300/50 dark:border-yellow-700/50 text-amber-600 dark:text-amber-400 px-14 py-8 rounded-3xl font-black text-4xl shadow-[0_10px_50px_-10px_rgba(251,191,36,0.4)]">
-          <div className="flex items-center space-x-6">
-            <Crown className="w-10 h-10 text-yellow-500" style={{ animation: 'floating 3s ease-in-out infinite' }} />
-            <span className="tracking-wider uppercase bg-gradient-to-r from-yellow-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">{perfectAnimation.message}</span>
-            <Crown className="w-10 h-10 text-yellow-500" style={{ animation: 'floating 3s ease-in-out infinite 1.5s' }} />
+    <div className="fixed inset-0 pointer-events-none z-[90] flex items-center justify-center">
+      <div className="relative" style={{ animation: 'scale-up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards' }}>
+        <div className="absolute inset-0 bg-yellow-400 opacity-20 blur-3xl rounded-full animate-pulse" style={{ animationDuration: '2s' }}></div>
+        <div className="relative overflow-hidden bg-white dark:bg-slate-900 border border-yellow-300 dark:border-yellow-600/50 px-8 py-5 rounded-2xl shadow-[0_10px_40px_-10px_rgba(251,191,36,0.3)]">
+          <div className="absolute inset-0 bg-gradient-to-tr from-yellow-100/30 to-amber-200/30 dark:from-yellow-900/20 dark:to-amber-900/20"></div>
+          <div className="relative z-10 flex items-center space-x-3">
+            <CheckCircle2 className="w-8 h-8 text-yellow-500" style={{ animation: 'floating 2s ease-in-out infinite' }} />
+            <span className="font-bold text-2xl tracking-wide uppercase bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">{perfectAnimation.message}</span>
+            <CheckCircle2 className="w-8 h-8 text-yellow-500" style={{ animation: 'floating 2s ease-in-out infinite 1s' }} />
           </div>
         </div>
       </div>
@@ -165,7 +171,7 @@ export const GameOverAnimation = React.memo(({ gameOverAnimation }: any) => {
         {/* Message de redémarrage */}
         <div className="flex items-center justify-center space-x-3 text-red-400 mt-6 bg-red-950/30 py-3 px-6 rounded-full border border-red-900/30">
           <RotateCcw className="w-5 h-5 animate-spin" style={{ animationDuration: '2s' }} />
-          <span className="font-medium tracking-wide">Redémarrage automatique...</span>
+          <span className="font-medium tracking-wide">{gameOverAnimation.restartMessage || "Redémarrage automatique..."}</span>
         </div>
 
         {/* Barre de progression du redémarrage */}

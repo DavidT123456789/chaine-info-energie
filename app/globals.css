@@ -212,15 +212,11 @@
 }
 
 /* Animation pour les confettis */
-@keyframes confetti-fall {
-  0% {
-    transform: translateY(-100vh) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh) rotate(720deg);
-    opacity: 0;
-  }
+@keyframes confetti-explode {
+  0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(720deg); opacity: 0; }
 }
 
 /* Animations pour les effets d'erreur et de succès */
@@ -329,13 +325,13 @@
 /* === ERROR FEEDBACK OVERLAY === */
 @keyframes errorFeedback {
   0% { transform: translateY(20px) scale(0.9); opacity: 0; }
-  10% { transform: translateY(0) scale(1.02); opacity: 1; }
-  85% { transform: translateY(0) scale(1); opacity: 1; }
+  8% { transform: translateY(0) scale(1.02); opacity: 1; }
+  82% { transform: translateY(0) scale(1); opacity: 1; }
   100% { transform: translateY(-10px) scale(0.95); opacity: 0; }
 }
 
 .animate-error-feedback {
-  animation: errorFeedback 3.5s ease-out forwards;
+  animation: errorFeedback 5.5s ease-out forwards;
 }
 
 /* === INTRO CARD ANIMATION === */

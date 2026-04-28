@@ -314,7 +314,7 @@ export const exercises = [
   {
     title: "Vélo à Assistance Électrique",
     description: "Un vélo qui assiste le pédalage grâce à un moteur électrique",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1571068316344-75bc76f77890?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0",
     elements: [
       {
         name: "Prise de recharge 230V",
@@ -391,7 +391,7 @@ export const exercises = [
   {
     title: "Système d'Alarme Incendie",
     description: "Système de détection et d'alerte automatique en cas de départ de feu",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1594818379496-da1e345b0ded?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0",
     elements: [
       {
         name: "Réseau électrique secouru",
@@ -468,7 +468,7 @@ export const exercises = [
   {
     title: "Serre Automatisée",
     description: "Serre agricole qui régule automatiquement l'arrosage selon l'humidité du sol",
-    image: "/placeholder.svg",
+    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.1.0",
     elements: [
       {
         name: "Panneau solaire",

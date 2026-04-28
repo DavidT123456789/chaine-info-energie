@@ -9,9 +9,8 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: 'Chaînes Info Énergie | Exercices Interactifs',
   description: 'Apprenez les concepts clés de l\'énergie avec nos exercices interactifs. Testez vos connaissances et progressez à votre rythme.',
-  generator: 'v0.app',
   keywords: 'énergie, exercices, chaînes, apprentissage, interactif',
-  authors: [{ name: 'v0 App' }],
+  authors: [{ name: 'David Trafial' }],
   openGraph: {
     title: 'Chaînes Info Énergie | Exercices Interactifs',
     description: 'Apprenez les concepts clés de l\'énergie avec nos exercices interactifs.',
@@ -42,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
@@ -50,3 +49,4 @@ export default function RootLayout({
     </html>
   )
 }
+
