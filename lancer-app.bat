@@ -38,7 +38,14 @@ if not exist "node_modules" (
     echo.
 )
 
-echo [2/2] Lancement du serveur...
+echo [2/3] Nettoyage du cache pour eviter les erreurs...
+if exist ".next" (
+    rmdir /s /q ".next"
+)
+echo [OK] Cache nettoye.
+echo.
+
+echo [3/3] Lancement du serveur...
 echo.
 echo ============================================
 echo   Ouvrez votre navigateur sur :

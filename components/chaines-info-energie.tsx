@@ -102,12 +102,54 @@ const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }:
   )
 }
 
-const ChainArrows = ({ chainType }: { chainType: string }) => {
-  const arrowColor = chainType === "info" ? "text-blue-500" : "text-red-500"
+const ChainArrows = ({ chainType, isActive, darkMode }: { chainType: string, isActive: boolean, darkMode: boolean }) => {
+  const isInfo = chainType === "info"
 
   return (
-    <div className="flex justify-center items-center">
-      <ArrowRight className={`w-6 h-6 ${arrowColor}`} />
+    <div className="flex justify-center items-center w-8 sm:w-10 mx-1 h-8 relative">
+      <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none" className="pointer-events-none overflow-visible absolute top-1/2 -translate-y-1/2 z-10">
+        <defs>
+          <linearGradient id={`flow-arrow-${chainType}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={isInfo ? (darkMode ? "#3b82f6" : "#2563eb") : (darkMode ? "#ef4444" : "#dc2626")} />
+            <stop offset="100%" stopColor={isInfo ? (darkMode ? "#8b5cf6" : "#7c3aed") : (darkMode ? "#f97316" : "#ea580c")} />
+          </linearGradient>
+          <filter id={`glow-arrow-${chainType}`} x="-20%" y="-50%" width="140%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        {/* Static dashed cable */}
+        <path
+          d="M 0 10 L 100 10"
+          fill="none"
+          stroke={darkMode ? "rgba(148,163,184,0.15)" : "rgba(148,163,184,0.3)"}
+          strokeWidth="3"
+          strokeDasharray="6 4"
+        />
+        
+        {/* Active glowing cable */}
+        {isActive && (
+          <>
+            <path
+              d="M 0 10 L 100 10"
+              fill="none"
+              stroke={`url(#flow-arrow-${chainType})`}
+              strokeWidth="4"
+              filter={`url(#glow-arrow-${chainType})`}
+              className="transition-opacity duration-500"
+            />
+            {/* Particle */}
+            <circle r="4" fill="white" filter={`url(#glow-arrow-${chainType})`}>
+              <animateMotion dur="1s" repeatCount="indefinite" path="M 0 10 L 100 10" rotate="auto" />
+              <animate attributeName="opacity" values="0;1;1;0" dur="1s" repeatCount="indefinite" />
+            </circle>
+          </>
+        )}
+      </svg>
     </div>
   )
 }
@@ -1261,10 +1303,10 @@ const ChainesInfoEnergie = () => {
 
     // Forme différente pour les éléments exogènes et la fonction
     if (isExogenous) {
-      zoneClasses += "w-40 h-24 rounded-full border-2 border-dashed "
+      zoneClasses += "w-36 h-16 rounded-full border-2 border-dashed "
       zoneClasses += darkMode ? "bg-transparent " : "bg-transparent "
     } else if (isFunction) {
-      zoneClasses += "w-40 h-24 rounded-full border-2 border-dashed "
+      zoneClasses += "w-36 h-16 rounded-full border-2 border-dashed "
       zoneClasses += darkMode ? "bg-gray-800 " : "bg-white "
     } else {
       zoneClasses += "w-40 h-20 rounded-lg border-2 border-dashed "
@@ -1732,15 +1774,15 @@ const ChainesInfoEnergie = () => {
                         </div>
                         <div className="flex justify-center items-center chain-responsive">
                           {renderDropZone("info", 0)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={lessonChains.info.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("info", 1)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={lessonChains.info.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("info", 2)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={lessonChains.info.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("info", 3)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={lessonChains.info.every((el) => el !== null)} darkMode={darkMode} />
                           {/* Messages — external output element */}
-                          <div className={`flex-shrink-0 px-5 py-3 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
+                          <div className={`w-36 h-16 flex items-center justify-center flex-shrink-0 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
                             darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
                           }`}>
                             Messages
@@ -1761,15 +1803,15 @@ const ChainesInfoEnergie = () => {
                         </div>
                         <div className="flex justify-center items-center chain-responsive">
                           {renderDropZone("energy", 0)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={lessonChains.energy.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("energy", 1)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={lessonChains.energy.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("energy", 2)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={lessonChains.energy.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("energy", 3)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={lessonChains.energy.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("energy", 4)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={lessonChains.energy.every((el) => el !== null)} darkMode={darkMode} />
                           {renderDropZone("energy", 5)}
                         </div>
                       </div>
@@ -1833,15 +1875,15 @@ const ChainesInfoEnergie = () => {
                         </div>
                         <div className="flex justify-center items-center chain-responsive">
                           {renderDropZone("info", 0, true)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "info").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("info", 1, true)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "info").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("info", 2, true)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "info").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("info", 3, true)}
-                          <ChainArrows chainType="info" />
+                          <ChainArrows chainType="info" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "info").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {/* Messages — external output element */}
-                          <div className={`flex-shrink-0 px-5 py-3 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
+                          <div className={`w-36 h-16 flex items-center justify-center flex-shrink-0 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
                             darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
                           }`}>
                             Messages
@@ -1866,15 +1908,15 @@ const ChainesInfoEnergie = () => {
                         </div>
                         <div className="flex justify-center items-center chain-responsive">
                           {renderDropZone("energy", 0, true)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "energy").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("energy", 1, true)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "energy").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("energy", 2, true)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "energy").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("energy", 3, true)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "energy").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("energy", 4, true)}
-                          <ChainArrows chainType="energy" />
+                          <ChainArrows chainType="energy" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "energy").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {renderDropZone("energy", 5, true)}
                         </div>
                       </div>
