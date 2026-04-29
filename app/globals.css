@@ -211,6 +211,17 @@
   animation: scaleIn 0.3s ease-out forwards;
 }
 
+/* Animation pour l'effet d'aimant/snap à la validation */
+@keyframes snapIn {
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.animate-snap {
+  animation: snapIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
 /* Animation pour les confettis */
 @keyframes confetti-explode {
   0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }

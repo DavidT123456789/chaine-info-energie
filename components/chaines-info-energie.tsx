@@ -56,7 +56,7 @@ import { NotificationSystem } from "./notification-system"
 import { MaitriseTotaleBadge } from "./badges/maitrise-totale-badge"
 
 const ElementCard = ({ element, isUsed = false, isSelected, darkMode, onClick }: any) => {
-  let cardClasses = "group relative p-3 md:p-4 rounded-xl shadow-md transition-all duration-300 hover:shadow-xl flex items-center justify-center text-center "
+  let cardClasses = "group relative py-3 px-6 md:py-4 md:px-8 rounded-full shadow-md transition-all duration-300 hover:shadow-xl flex items-center justify-center text-center "
 
   if (isUsed) {
     cardClasses += darkMode
@@ -142,11 +142,28 @@ const ChainArrows = ({ chainType, isActive, darkMode }: { chainType: string, isA
               filter={`url(#glow-arrow-${chainType})`}
               className="transition-opacity duration-500"
             />
-            {/* Particle */}
-            <circle r="4" fill="white" filter={`url(#glow-arrow-${chainType})`}>
-              <animateMotion dur="1s" repeatCount="indefinite" path="M 0 10 L 100 10" rotate="auto" />
-              <animate attributeName="opacity" values="0;1;1;0" dur="1s" repeatCount="indefinite" />
-            </circle>
+            {/* Particle / Flow */}
+            {!isInfo ? (
+              <circle r="4" fill="white" filter={`url(#glow-arrow-${chainType})`}>
+                <animateMotion dur="1s" repeatCount="indefinite" path="M 0 10 L 100 10" rotate="auto" />
+                <animate attributeName="opacity" values="0;1;1;0" dur="1s" repeatCount="indefinite" />
+              </circle>
+            ) : (
+              <>
+                <circle r="3" fill="white" filter={`url(#glow-arrow-${chainType})`}>
+                  <animateMotion dur="0.6s" repeatCount="indefinite" path="M 0 10 L 100 10" rotate="auto" />
+                  <animate attributeName="opacity" values="0;1;1;0" dur="0.6s" repeatCount="indefinite" />
+                </circle>
+                <circle r="3" fill="white" filter={`url(#glow-arrow-${chainType})`}>
+                  <animateMotion dur="0.6s" repeatCount="indefinite" begin="0.2s" path="M 0 10 L 100 10" rotate="auto" />
+                  <animate attributeName="opacity" values="0;1;1;0" dur="0.6s" repeatCount="indefinite" begin="0.2s" />
+                </circle>
+                <circle r="3" fill="white" filter={`url(#glow-arrow-${chainType})`}>
+                  <animateMotion dur="0.6s" repeatCount="indefinite" begin="0.4s" path="M 0 10 L 100 10" rotate="auto" />
+                  <animate attributeName="opacity" values="0;1;1;0" dur="0.6s" repeatCount="indefinite" begin="0.4s" />
+                </circle>
+              </>
+            )}
           </>
         )}
       </svg>
@@ -160,7 +177,7 @@ const CommunicateDistributeLink = ({ darkMode, isConnectionActive }: { darkMode:
       {/* Connection SVG — fixed 1080px width so it precisely matches the centered Energy chain below */}
       <svg width="1080" height="156" viewBox="0 0 1080 156" className="pointer-events-none overflow-visible absolute" style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }}>
         <defs>
-          <linearGradient id="active-flow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <linearGradient id="active-flow" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor={darkMode ? "#60a5fa" : "#3b82f6"} />
             <stop offset="50%" stopColor={darkMode ? "#a78bfa" : "#8b5cf6"} />
             <stop offset="100%" stopColor={darkMode ? "#f87171" : "#ef4444"} />
@@ -188,19 +205,13 @@ const CommunicateDistributeLink = ({ darkMode, isConnectionActive }: { darkMode:
               d="M 752 0 C 752 78, 448 78, 448 156"
               fill="none"
               stroke="url(#active-flow)"
-              strokeWidth="3"
+              strokeWidth="4"
               filter="url(#glow-connection)"
               className="transition-opacity duration-500"
             />
             {/* Animated data particle 1 */}
             <circle r="4" fill="white" filter="url(#glow-connection)">
-              <animateMotion dur="1.8s" repeatCount="indefinite" path="M 752 0 C 752 78, 448 78, 448 156" rotate="auto" />
-              <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" />
-            </circle>
-            {/* Animated data particle 2 — staggered */}
-            <circle r="3" fill="white" opacity="0.7" filter="url(#glow-connection)">
-              <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s" path="M 752 0 C 752 78, 448 78, 448 156" rotate="auto" />
-              <animate attributeName="opacity" values="0;0.7;0.7;0" dur="1.8s" repeatCount="indefinite" begin="0.9s" />
+              <animateMotion dur="1.5s" repeatCount="indefinite" path="M 752 0 C 752 78, 448 78, 448 156" rotate="auto" />
             </circle>
           </>
         )}
@@ -1296,51 +1307,45 @@ const ChainesInfoEnergie = () => {
     const zoneId = `${chainType}-${position}`
     const hintId = `hint-${chainType}-${position}`
 
+    const getElementTheme = (chainType, position) => {
+      if (chainType === "energy") {
+        if (position === 0) return { bg: "bg-pink-500", text: "text-white", shadow: "shadow-pink-500/40" }
+        if (position === 1) return { bg: "bg-rose-500", text: "text-white", shadow: "shadow-rose-500/40" }
+        if (position === 2) return { bg: "bg-red-500", text: "text-white", shadow: "shadow-red-500/40" }
+        if (position === 3) return { bg: "bg-red-600", text: "text-white", shadow: "shadow-red-600/40" }
+        if (position === 4) return { bg: "bg-orange-500", text: "text-white", shadow: "shadow-orange-500/40" }
+        if (position === 5) return { bg: "bg-amber-500", text: "text-white", shadow: "shadow-amber-500/40" }
+      } else {
+        if (position === 0) return { bg: "bg-cyan-500", text: "text-white", shadow: "shadow-cyan-500/40" }
+        if (position === 1) return { bg: "bg-sky-500", text: "text-white", shadow: "shadow-sky-500/40" }
+        if (position === 2) return { bg: "bg-blue-500", text: "text-white", shadow: "shadow-blue-500/40" }
+        return { bg: "bg-indigo-500", text: "text-white", shadow: "shadow-indigo-500/40" }
+      }
+    }
+
     const isExogenous = (chainType === "info" && position === 0) || (chainType === "energy" && position === 0)
     const isFunction = chainType === "energy" && position === 5
 
-    let zoneClasses = "flex items-center justify-center transition-all duration-300 cursor-pointer relative "
+    let zoneClasses = "transition-all duration-300 relative "
 
-    // Forme différente pour les éléments exogènes et la fonction
-    if (isExogenous) {
-      zoneClasses += "w-36 h-16 rounded-full border-2 border-dashed "
-      zoneClasses += darkMode ? "bg-transparent " : "bg-transparent "
-    } else if (isFunction) {
-      zoneClasses += "w-36 h-16 rounded-full border-2 border-dashed "
+    if (!isOccupied) {
+      zoneClasses += "flex items-center justify-center cursor-pointer "
+      // Forme différente pour les éléments exogènes et la fonction
+      zoneClasses += `w-40 h-16 rounded-full border-2 border-dashed `
       zoneClasses += darkMode ? "bg-gray-800 " : "bg-white "
-    } else {
-      zoneClasses += "w-40 h-20 rounded-lg border-2 border-dashed "
-      zoneClasses += darkMode ? "bg-gray-800 " : "bg-white "
-    }
 
-    if (isOccupied) {
-      zoneClasses += darkMode
-        ? "border-green-400 bg-green-900 cursor-default transform scale-105 shadow-lg"
-        : "border-green-500 bg-green-50 cursor-default transform scale-105 shadow-lg"
-    } else if (hoveredZone === zoneId) {
-      zoneClasses += darkMode
-        ? "border-gray-500 " + (isExogenous ? "" : "bg-gray-700")
-        : "border-gray-400 " + (isExogenous ? "" : "bg-gray-50")
-    } else {
-      zoneClasses += darkMode
-        ? "border-gray-600 hover:border-gray-500 " + (isExogenous ? "" : "hover:bg-gray-700")
-        : "border-gray-300 hover:border-gray-400 " + (isExogenous ? "" : "hover:bg-gray-50")
-    }
-
-    const getElementColor = (chainType, position) => {
-      if (chainType === "energy") {
-        if (position === 0) return "bg-pink-500"
-        if (position === 1) return "bg-red-500"
-        if (position === 2) return "bg-indigo-500"
-        if (position === 3) return "bg-orange-500"
-        if (position === 4) return "bg-yellow-500"
-        if (position === 5) return "bg-lime-500"
+      if (hoveredZone === zoneId) {
+        zoneClasses += darkMode
+          ? "border-gray-500 " + (isExogenous ? "" : "bg-gray-700 ")
+          : "border-gray-400 " + (isExogenous ? "" : "bg-gray-50 ")
       } else {
-        if (position === 0) return "bg-teal-500"
-        if (position === 1) return "bg-blue-500"
-        if (position === 2) return "bg-purple-500"
-        return "bg-green-500"
+        zoneClasses += darkMode
+          ? "border-gray-600 hover:border-gray-500 " + (isExogenous ? "" : "hover:bg-gray-700 ")
+          : "border-gray-300 hover:border-gray-400 " + (isExogenous ? "" : "hover:bg-gray-50 ")
       }
+    } else {
+      zoneClasses += "cursor-default animate-snap z-20 flex items-center justify-center "
+      zoneClasses += "w-40 h-16 "
     }
 
     return (
@@ -1359,13 +1364,35 @@ const ChainesInfoEnergie = () => {
         className={`${zoneClasses} ${!isOccupied && selectedElement ? "drop-zone-glow" : ""}`}
       >
         {isOccupied ? (
-          <div
-            className={`px-3 py-1 rounded text-white text-sm font-semibold cursor-pointer hover:opacity-80 transition-opacity ${getElementColor(chainType, position)} ${
-              isExogenous || isFunction ? "text-center" : ""
-            }`}
-            title="Cliquez pour voir les informations"
-          >
-            {isExercise ? occupiedElement.name : occupiedElement.text}
+          <div className="relative w-full h-full group">
+            <div
+              className={`absolute inset-0 flex items-center justify-center cursor-pointer transition-transform duration-300 rounded-full ${
+                isExogenous || isFunction
+                  ? `border-2 border-solid ${
+                      chainType === "info"
+                        ? darkMode
+                          ? "border-cyan-700/50 text-cyan-400 bg-cyan-900/40"
+                          : "border-cyan-300 text-cyan-600 bg-cyan-50/80 shadow-sm"
+                        : position === 0
+                          ? darkMode
+                            ? "border-pink-700/50 text-pink-400 bg-pink-900/40"
+                            : "border-pink-300 text-pink-600 bg-pink-50/80 shadow-sm"
+                          : darkMode
+                            ? "border-amber-700/50 text-amber-400 bg-amber-900/40"
+                            : "border-amber-300 text-amber-600 bg-amber-50/80 shadow-sm"
+                    }`
+                  : `${getElementTheme(chainType, position).bg} group-hover:-translate-y-1`
+              }`}
+              title="Cliquez pour voir les informations"
+            >
+              <span
+                className={`font-bold text-[14px] leading-tight text-center px-4 ${
+                  isExogenous || isFunction ? "" : getElementTheme(chainType, position).text
+                }`}
+              >
+                {isExercise ? occupiedElement.name : occupiedElement.text}
+              </span>
+            </div>
           </div>
         ) : (
           <div className={`text-sm font-medium text-center px-2 ${darkMode ? "text-gray-400" : "text-gray-400"}`}>
@@ -1465,7 +1492,7 @@ const ChainesInfoEnergie = () => {
   }
 
   // Bouton "Suivant" dynamique
-  const NextExerciseButton = () => {
+  const renderNextExerciseButton = () => {
     // If we are in "lesson" (which is actually Exercice 1) and it's unlocked, show the button to go to "exercises"
     if (currentMode === "lesson" && isLessonUnlocked) {
       const exerciseNumber = currentExercise + 2;
@@ -1476,7 +1503,7 @@ const ChainesInfoEnergie = () => {
         <div className="fixed bottom-6 right-6 z-40">
           <button
             onClick={() => setCurrentMode("exercises")}
-            className={`group px-7 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 ${
+            className={`group pl-7 pr-5 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2 shadow-[0_8px_40px_rgb(0,0,0,0.35)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.45)] hover:-translate-y-0.5 ${
               darkMode
                 ? "bg-blue-500/15 backdrop-blur-md text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-500/40"
                 : "bg-blue-600 text-white hover:bg-blue-700"
@@ -1505,14 +1532,14 @@ const ChainesInfoEnergie = () => {
             setSelectedElement(null)
             setShowNextExercise(false)
           }}
-          className={`group px-7 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 ${
+          className={`group pl-7 pr-5 py-3.5 rounded-full font-medium text-[15px] tracking-wide transition-all duration-300 flex items-center gap-2 shadow-[0_8px_40px_rgb(0,0,0,0.35)] hover:shadow-[0_12px_50px_rgb(0,0,0,0.45)] hover:-translate-y-0.5 ${
             darkMode
               ? "bg-blue-500/15 backdrop-blur-md text-blue-300 border border-blue-500/30 hover:bg-blue-500/25 hover:border-blue-500/40"
               : "bg-blue-600 text-white hover:bg-blue-700"
           }`}
         >
           <span>Exercice {nextExerciseIndex + 2}</span>
-          <ChevronRight className="w-5 h-5 ml-1 transition-transform duration-300 group-hover:translate-x-0.5" />
+          <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" />
         </button>
       </div>
     )
@@ -1587,7 +1614,7 @@ const ChainesInfoEnergie = () => {
         darkMode={darkMode}
       />
       <UnifiedNavigation />
-      <NextExerciseButton />
+      {renderNextExerciseButton()}
 
       <div className="w-full max-w-[1600px] mx-auto p-4 md:p-8">
         {showHintModal && <HintModal element={showHintModal} onClose={() => setShowHintModal(null)} darkMode={darkMode} />}
@@ -1782,8 +1809,8 @@ const ChainesInfoEnergie = () => {
                           {renderDropZone("info", 3)}
                           <ChainArrows chainType="info" isActive={lessonChains.info.every((el) => el !== null)} darkMode={darkMode} />
                           {/* Messages — external output element */}
-                          <div className={`w-36 h-16 flex items-center justify-center flex-shrink-0 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
-                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
+                          <div className={`w-40 h-16 flex items-center justify-center rounded-full border-2 border-solid text-[14px] font-bold transition-colors duration-300 ${
+                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-900/40" : "border-blue-300 text-blue-600 bg-blue-50/80 shadow-sm"
                           }`}>
                             Messages
                           </div>
@@ -1883,8 +1910,8 @@ const ChainesInfoEnergie = () => {
                           {renderDropZone("info", 3, true)}
                           <ChainArrows chainType="info" isActive={exercises[currentExercise].elements.filter((el: any) => el.chain === "info").every((el: any) => completedExercises.includes(`${currentExercise}-${el.name}`))} darkMode={darkMode} />
                           {/* Messages — external output element */}
-                          <div className={`w-36 h-16 flex items-center justify-center flex-shrink-0 rounded-full border-2 border-dashed text-sm font-medium transition-colors duration-300 ${
-                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-950/30" : "border-blue-300 text-blue-600 bg-blue-50/50"
+                          <div className={`w-40 h-16 flex items-center justify-center rounded-full border-2 border-solid text-[14px] font-bold transition-colors duration-300 ${
+                            darkMode ? "border-blue-700/50 text-blue-400 bg-blue-900/40" : "border-blue-300 text-blue-600 bg-blue-50/80 shadow-sm"
                           }`}>
                             Messages
                           </div>
